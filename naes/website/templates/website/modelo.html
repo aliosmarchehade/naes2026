@@ -1,13 +1,324 @@
 {% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UFC Manager</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+
+  <!-- Estilo personalizado -->
+  <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+
 </head>
 <body>
-    <h3>UFC</h3>
+
+  <!-- ═══════════════════════════════════
+       NAVBAR
+  ════════════════════════════════════ -->
+  <nav class="navbar navbar-expand-lg navbar-petrol fixed-top">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <span class="brand-dot"></span>
+        UFC Manager
+      </a>
+
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#navMain"
+              aria-controls="navMain" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav links -->
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav mx-auto gap-1">
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">
+              <i class="bi bi-house me-1"></i>Início
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'sobre' %}">
+              <i class="bi bi-info-circle me-1"></i>Sobre
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contato' %}">
+              <i class="bi bi-envelope me-1"></i>Contato
+            </a>
+          </li>
+
+          <!-- Dropdown: Gerenciar -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-grid me-1"></i>Gerenciar
+            </a>
+            <ul class="dropdown-menu shadow">
+              <li><span class="dropdown-header">Atletas</span></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus me-2"></i>Cadastrar Lutador</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-people me-2"></i>Ver Lutadores</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><span class="dropdown-header">Competições</span></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-calendar-plus me-2"></i>Novo Evento</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-trophy me-2"></i>Ver Eventos</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-in-right me-2"></i>Gerenciar Lutas</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><span class="dropdown-header">Rankings</span></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-bar-chart-line me-2"></i>Ver Ranking</a></li>
+            </ul>
+          </li>
+
+        </ul>
+
+        <!-- Auth -->
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+
+          <!-- Não autenticado -->
+          <div id="authGuest" class="d-flex gap-2">
+            <a href="#" class="btn-auth btn" data-bs-toggle="modal" data-bs-target="#modalLogin">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Entrar
+            </a>
+            <a href="#" class="btn btn-primary btn-sm px-3 fw-semibold rounded-2">
+              Cadastrar-se
+            </a>
+          </div>
+
+          <!-- Autenticado -->
+          <div id="authUser" class="d-none dropdown">
+            <div class="user-chip" data-bs-toggle="dropdown" aria-expanded="false">
+              <div class="user-avatar">🥊</div>
+              <span class="user-chip-name d-none d-md-inline">Usuário</span>
+              <i class="bi bi-chevron-down text-white-50" style="font-size:.65rem"></i>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end shadow mt-2">
+              <li><span class="dropdown-header">Conta</span></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Meu Perfil</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><span class="dropdown-header">UFC</span></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-trophy me-2"></i>Meus Eventos</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-people me-2"></i>Lutadores</a></li>
+              <li><a class="dropdown-item" href="#"><i class="bi bi-graph-up me-2"></i>Rankings</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item text-danger" href="#" onclick="toggleAuth(); return false;">
+                <i class="bi bi-box-arrow-left me-2"></i>Sair
+              </a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════ -->
+  <main style="padding-top: 56px;">
+
+    {% block hero %}{% endblock hero %}
+
+    {% block conteudo %}{% endblock conteudo %}
+
+  </main>
+
+  <!-- ═══════════════════════════════════
+       FOOTER
+  ════════════════════════════════════ -->
+  <footer class="py-5">
+    <div class="container">
+      <div class="row g-4 pb-4">
+
+        <div class="col-lg-4">
+          <div class="footer-brand mb-2">
+            <span style="color:var(--petrol-lighter)">🥊</span> UFC Manager
+          </div>
+          <p style="max-width:280px; line-height:1.7">
+            Plataforma completa para gerenciar eventos de luta, cadastrar lutadores e acompanhar rankings em tempo real.
+          </p>
+          <div class="footer-social d-flex gap-2 mt-3">
+            <a href="#"><i class="bi bi-github"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-youtube"></i></a>
+            <a href="#"><i class="bi bi-discord"></i></a>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Lutadores</div>
+          <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+            <li><a href="#">Cadastrar</a></li>
+            <li><a href="#">Ver Todos</a></li>
+            <li><a href="#">Categorias</a></li>
+            <li><a href="#">Rankings</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Eventos</div>
+          <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+            <li><a href="#">Próximos</a></li>
+            <li><a href="#">Histórico</a></li>
+            <li><a href="#">Criar Evento</a></li>
+            <li><a href="#">Resultados</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Lutas</div>
+          <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+            <li><a href="#">Agendar</a></li>
+            <li><a href="#">Ao Vivo</a></li>
+            <li><a href="#">Finalizadas</a></li>
+            <li><a href="#">Estatísticas</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <div class="footer-heading">Sistema</div>
+          <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+            <li><a href="{% url 'sobre' %}">Sobre</a></li>
+            <li><a href="{% url 'contato' %}">Contato</a></li>
+            <li><a href="#">Suporte</a></li>
+            <li><a href="#">Acessibilidade</a></li>
+          </ul>
+        </div>
+
+      </div>
+      <hr />
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 pt-2">
+        <span style="font-size:.8rem">© 2026 UFC Manager — IFPR. Todos os direitos reservados.</span>
+        <div class="d-flex gap-3" style="font-size:.8rem">
+          <a href="{% url 'sobre' %}">Sobre</a>
+          <a href="{% url 'contato' %}">Contato</a>
+          <a href="#">Suporte</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════
+       MODAL LOGIN
+  ════════════════════════════════════ -->
+  <div class="modal fade" id="modalLogin" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-2xl border-0 shadow-lg overflow-hidden">
+        <div class="modal-body p-0">
+          <ul class="nav nav-pills p-3 pb-0 gap-1" id="authTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active fw-semibold px-4 rounded-2" id="login-tab"
+                      data-bs-toggle="tab" data-bs-target="#login" type="button">
+                Entrar
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link fw-semibold px-4 rounded-2" id="register-tab"
+                      data-bs-toggle="tab" data-bs-target="#register" type="button">
+                Cadastrar
+              </button>
+            </li>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal"></button>
+          </ul>
+
+          <div class="tab-content p-4 pt-3">
+            <!-- Login -->
+            <div class="tab-pane fade show active" id="login" role="tabpanel">
+              <p class="text-secondary mb-4" style="font-size:.875rem">
+                Acesse sua conta para gerenciar eventos e lutadores.
+              </p>
+              <div class="mb-3">
+                <label class="form-label fw-semibold" style="font-size:.85rem">E-mail</label>
+                <input type="email" class="form-control rounded-2" placeholder="seu@email.com">
+              </div>
+              <div class="mb-4">
+                <label class="form-label fw-semibold d-flex justify-content-between" style="font-size:.85rem">
+                  Senha <a href="#" class="text-primary" style="font-weight:400">Esqueci a senha</a>
+                </label>
+                <input type="password" class="form-control rounded-2" placeholder="••••••••">
+              </div>
+              <button class="btn btn-primary w-100 rounded-2 fw-semibold py-2" onclick="simulateLogin()">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Entrar
+              </button>
+            </div>
+
+            <!-- Cadastro -->
+            <div class="tab-pane fade" id="register" role="tabpanel">
+              <p class="text-secondary mb-4" style="font-size:.875rem">
+                Crie sua conta e comece a gerenciar eventos UFC.
+              </p>
+              <div class="mb-3">
+                <label class="form-label fw-semibold" style="font-size:.85rem">Nome completo</label>
+                <input type="text" class="form-control rounded-2" placeholder="João da Silva">
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold" style="font-size:.85rem">E-mail</label>
+                <input type="email" class="form-control rounded-2" placeholder="seu@email.com">
+              </div>
+              <div class="mb-4">
+                <label class="form-label fw-semibold" style="font-size:.85rem">Senha</label>
+                <input type="password" class="form-control rounded-2" placeholder="••••••••">
+              </div>
+              <button class="btn btn-primary w-100 rounded-2 fw-semibold py-2" onclick="simulateLogin()">
+                <i class="bi bi-person-plus me-1"></i>Criar conta
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Toggle auth state
+    function toggleAuth() {
+      const guest = document.getElementById('authGuest');
+      const user  = document.getElementById('authUser');
+      guest.classList.toggle('d-none');
+      user.classList.toggle('d-none');
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalLogin'));
+      if (modal) modal.hide();
+    }
+
+    function simulateLogin() {
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalLogin'));
+      if (modal) modal.hide();
+      document.getElementById('authGuest').classList.add('d-none');
+      document.getElementById('authUser').classList.remove('d-none');
+    }
+
+    // Nav active link
+    $(document).ready(function () {
+      const currentPath = window.location.pathname;
+      $('.navbar-petrol .nav-link').each(function () {
+        if ($(this).attr('href') === currentPath) {
+          $(this).addClass('active');
+        }
+      });
+    });
+  </script>
+
 </body>
 </html>

@@ -1,0 +1,224 @@
+{% extends "website/modelo.html" %}
+
+{% load static %}
+
+{% block hero %}
+<!-- ── Hero: Sobre ── -->
+<section class="hero py-5 py-lg-6">
+  <div class="hero-noise"></div>
+  <div class="container py-4 py-lg-5 position-relative">
+    <div class="row align-items-center gy-4">
+      <div class="col-lg-8">
+        <span class="badge bg-petrol-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-3 d-inline-block" style="font-size:1.2rem; letter-spacing:.05em;">
+          <i class="bi bi-controller me-1"></i> 🥊🥊 Lutas & Ranking
+        </span>
+        <h1 class="display-3 fw-display text-white mb-3">
+            Gerenciamento de Eventos<br>
+          <span style="color: var(--petrol-lighter);">UFC</span>
+        </h1>
+        <p class="mb-4" style="color: rgba(255,255,255,.8); font-size:1.05rem; max-width:580px; line-height:1.8">
+            Uma plataforma completa para gerenciar eventos de luta, cadastrar lutadores, organizar combates e acompanhar rankings em tempo real.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{% url "index" %}" class="btn btn-light fw-semibold px-4 rounded-2">
+            <i class="bi bi-arrow-right me-1"></i>Explorar Eventos
+          </a>
+          <a href="{% url "contato" %}" class="btn btn-auth px-4 rounded-2">
+            <i class="bi bi-envelope me-1"></i>Entrar em Contato
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-4 d-none d-lg-flex justify-content-end">
+        <!-- Decorative card mockup -->
+        <div class="p-4 rounded-2xl" style="background:rgba(45,158,107,.15); backdrop-filter:blur(12px); border:2px solid rgba(45,158,107,.3); width:280px;">
+          <div class="text-center">
+            <div style="font-size:3rem; margin-bottom:1rem">🥊</div>
+            <p style="color:rgba(255,255,255,.9); font-weight:600; margin-bottom:.5rem">Gerenciar Lutas</p>
+            <p style="color:rgba(255,255,255,.6); font-size:.85rem; margin-bottom:1rem">Controle completo de eventos e rankings</p>
+            <div class="d-flex gap-2 justify-content-center">
+              <span class="badge bg-success rounded-pill">Fights</span>
+              <span class="badge bg-info rounded-pill">Rankings</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock hero %}
+
+{% block conteudo %}
+
+<!-- ── Missão e Visão ── -->
+<section class="py-5 py-lg-6 bg-surface">
+  <div class="container">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6">
+        <h2 class="fw-display mb-3">Nossa Missão</h2>
+        <p class="text-secondary mb-4" style="font-size:1.05rem; line-height:1.8;">
+            Proporcionar um sistema eficiente para gerenciamento de eventos de luta, permitindo organização de combates, acompanhamento de resultados e evolução dos rankings de lutadores.
+        </p>
+        </p>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="d-flex gap-3">
+              <div class="feature-icon bg-primary bg-opacity-10">
+                <i class="bi bi-trophy text-primary fs-5"></i>
+              </div>
+              <div>
+                <h6 class="fw-semibold mb-1">Competições Realistas</h6>
+                <p class="text-secondary mb-0" style="font-size:.9rem">Simulação fiel de eventos UFC</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="d-flex gap-3">
+              <div class="feature-icon bg-success bg-opacity-10">
+                <i class="bi bi-people-fill text-success fs-5"></i>
+              </div>
+              <div>
+                <h6 class="fw-semibold mb-1">Rankings Dinamicos</h6>
+                <p class="text-secondary mb-0" style="font-size:.9rem">Atualização automática após lutas        </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-petrol p-5 bg-gradient">
+          <div class="text-center">
+            <div style="font-size:4rem;">🔥</div>
+            <h3 class="fw-display">O Mundo das Lutas</h3>
+            <p>
+              Organize eventos, registre resultados e acompanhe o crescimento dos lutadores rumo ao topo.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── Recursos ── -->
+<section class="py-5 py-lg-6 bg-surface-alt">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-display mb-3">Funcionalidades</h2>
+      <p class="text-secondary">
+        Tudo que você precisa para gerenciar o universo do UFC
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card-petrol p-4 text-center">
+          🗓️
+          <h5>Criar Eventos</h5>
+          <p>Organize eventos e cards de luta</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card-petrol p-4 text-center">
+          🧍
+          <h5>Cadastrar Lutadores</h5>
+          <p>Gerencie atletas e empresários</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card-petrol p-4 text-center">
+          🥊
+          <h5>Gerenciar Lutas</h5>
+          <p>Defina combates e acompanhe resultados</p>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card-petrol p-4 text-center">
+          📈
+          <h5>Ranking</h5>
+          <p>Acompanhe a evolução dos lutadores</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── Como Funciona ── -->
+<section class="py-5 py-lg-6 bg-surface">
+  <div class="container text-center">
+    <h2 class="fw-display mb-5">Como Funciona</h2>
+
+    <div class="row g-4">
+
+      <div class="col-md-3">
+        <h4>1</h4>
+        <p>Cadastre lutadores e categorias</p>
+      </div>
+
+      <div class="col-md-3">
+        <h4>2</h4>
+        <p>Crie eventos e lutas</p>
+      </div>
+
+      <div class="col-md-3">
+        <h4>3</h4>
+        <p>Registre resultados</p>
+      </div>
+
+      <div class="col-md-3">
+        <h4>4</h4>
+        <p>Atualize rankings automaticamente</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── Estatísticas ── -->
+<section class="py-5 bg-dark text-center text-white">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-3">
+        <h3>50+</h3>
+        <p>Lutadores</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3>20+</h3>
+        <p>Lutas Registradas</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3>10+</h3>
+        <p>Eventos</p>
+      </div>
+
+      <div class="col-md-3">
+        <h3>∞</h3>
+        <p>Possibilidades</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── CTA ── -->
+<section class="py-5 text-center bg-petrol-darker text-white">
+  <div class="container">
+    <h2>Pronto para começar?</h2>
+    <p>Gerencie lutas e construa o ranking definitivo</p>
+    <a href="{% url "index" %}" class="btn btn-light">Explorar</a>
+  </div>
+</section>
+
+{% endblock conteudo %}
