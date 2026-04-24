@@ -1,0 +1,77 @@
+{% extends "website/modelo.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block conteudo %}
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    
+    <div class="col-md-{{ largura|default:"6" }}">
+      
+      <div class="card-petrol p-4 rounded-2xl shadow-lg"
+           style="background:#111; border:1px solid #222;">
+
+        <!-- TÍTULO -->
+        <div class="text-center mb-4">
+          <h3 class="fw-display text-white">
+            {{ titulo }}
+          </h3>
+        </div>
+
+        <!-- FORM -->
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="mb-3 text-white">
+            {{ form|crispy }}
+          </div>
+
+          <!-- BOTÕES -->
+          <div class="d-flex gap-2 mt-4">
+
+            {% if botao == "Sim, excluir!" %}
+              <div class="w-100">
+                
+                <div class="alert text-center mb-4"
+                     style="background:#2b0b0b; border:1px solid #7a1a1a; color:#ffb3b3;">
+                  
+                  <strong>⚠ Atenção!</strong><br>
+                  Deseja realmente excluir:
+                  <strong>{{ object }}</strong>?
+                </div>
+
+                <button type="submit" class="btn w-100"
+                        style="background:#c1121f; color:#fff;">
+                  {{ botao }}
+                </button>
+
+              </div>
+
+            {% else %}
+
+              <button type="submit" class="btn px-4"
+                      style="background:#c1121f; color:#fff;">
+                {{ botao }}
+              </button>
+
+            {% endif %}
+
+            <a href="#" class="btn btn-outline-light px-4"
+               onclick="window.history.back()">
+              Cancelar
+            </a>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock conteudo %}
