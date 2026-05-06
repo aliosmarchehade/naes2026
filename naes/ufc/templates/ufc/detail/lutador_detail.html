@@ -1,0 +1,110 @@
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+
+<div class="container py-5">
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="card-petrol p-4 rounded-2xl"
+           style="background:#111; border:1px solid #222;">
+
+        <!-- HEADER -->
+        <div class="text-center mb-4">
+          <h2 class="fw-display text-white">
+            {{ object.nome }}
+          </h2>
+
+          {% if object.apelido %}
+            <p style="color:#ff4d4d;" class="mb-0">
+              "{{ object.apelido }}"
+            </p>
+          {% endif %}
+        </div>
+
+        <hr style="border-color:#333;">
+
+        <!-- INFORMAÇÕES -->
+        <div class="row g-4 text-white">
+
+          <div class="col-md-6">
+            <small class="text-secondary">Idade</small>
+            <p class="mb-0 fs-5">{{ object.idade }} anos</p>
+          </div>
+
+          <div class="col-md-6">
+            <small class="text-secondary">Peso</small>
+            <p class="mb-0 fs-5">{{ object.peso }} kg</p>
+          </div>
+
+          <div class="col-md-6">
+            <small class="text-secondary">Categoria</small>
+            <p class="mb-0 fs-5">{{ object.categoria.nome }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <small class="text-secondary">Record</small>
+            <p class="mb-0 fs-5">
+              <span style="color:#4caf50;">{{ object.vitorias }}</span> -
+              <span style="color:#f44336;">{{ object.derrotas }}</span>
+            </p>
+          </div>
+
+        </div>
+
+        <hr style="border-color:#333;">
+
+        <!-- INFORMAÇÕES DO SISTEMA -->
+        <div class="row g-3 text-white-50 mt-2">
+
+          <div class="col-md-6">
+            <small>Cadastrado por</small>
+            <p class="mb-0">{{ object.cadastrado_por.username }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <small>ID</small>
+            <p class="mb-0">#{{ object.pk }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <small>Cadastrado em</small>
+            <p class="mb-0">{{ object.cadastrado_em|date:"d/m/Y H:i" }}</p>
+          </div>
+
+          <div class="col-md-6">
+            <small>Atualizado em</small>
+            <p class="mb-0">{{ object.atualizado_em|date:"d/m/Y H:i" }}</p>
+          </div>
+
+        </div>
+
+        <!-- AÇÕES -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+
+          <a href="{% url 'lutador-update' object.pk %}"
+             class="btn btn-outline-warning">
+            Editar
+          </a>
+
+          <a href="{% url 'lutador-delete' object.pk %}"
+             class="btn btn-outline-danger">
+            Excluir
+          </a>
+
+          <a href="#" class="btn btn-outline-light"
+             onclick="window.history.back()">
+            Voltar
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock conteudo %}

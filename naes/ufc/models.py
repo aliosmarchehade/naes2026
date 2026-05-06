@@ -25,7 +25,7 @@ class Lutador(models.Model):
 
     cadastrado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
-    cadastrado_por = models.ForeignKey(User, on_delete=models.PROTECT)
+    cadastrado_por = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True) ## Aqui tirei a obrigatoriedade de estar logado,so para testar e apresentar
 
     def __str__(self):
         return f"{self.nome} ({self.apelido})"

@@ -1,0 +1,28 @@
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-0">
+
+            <div class="card-header bg-danger text-white text-center">
+                <h5 class="mb-0">Detalhes da Categoria</h5>
+            </div>
+
+            <div class="card-body">
+                <p><strong>Nome:</strong> {{ object.nome }}</p>
+                <p><strong>Peso Máximo:</strong> {{ object.peso_maximo }} kg</p>
+            </div>
+
+            <div class="card-footer text-center">
+                <a href="{% url 'categoria-list' %}" class="btn btn-secondary">
+                    Voltar
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock conteudo %}

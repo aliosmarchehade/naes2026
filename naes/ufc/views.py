@@ -1,13 +1,15 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
-from .models import Lutador
+from .models import Lutador, CategoriaPeso
+# from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 
 
-# CREATE
+
+## CREATES ##
 class LutadorCreate(CreateView):
     model = Lutador
     fields = ['nome', 'apelido', 'idade', 'peso', 'categoria']
-    template_name = 'form.html'
+    template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
     extra_context = {
@@ -16,15 +18,25 @@ class LutadorCreate(CreateView):
     }
 
     def form_valid(self, form):
-        form.instance.cadastrado_por = self.request.user
         return super().form_valid(form)
 
 
-# UPDATE
+class CategoriaPesoCreate(CreateView):
+    model = CategoriaPeso
+    fields = ['nome', 'peso_maximo']
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('categoria-list')
+
+    extra_context = {
+        'titulo': 'Cadastro de Categoria de Peso',
+        'botao': 'Criar Categoria'
+    }
+
+## UPDATES ##
 class LutadorUpdate(UpdateView):
     model = Lutador
     fields = ['nome', 'apelido', 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
-    template_name = 'form.html'
+    template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
     extra_context = {
@@ -32,8 +44,18 @@ class LutadorUpdate(UpdateView):
         'botao': 'Atualizar'
     }
 
+class CategoriaPesoUpdate(UpdateView):
+    model = CategoriaPeso
+    fields = ['nome', 'peso_maximo']
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('categoria-list')
 
-# DELETE
+    extra_context = {
+        'titulo': 'Editar Categoria',
+        'botao': 'Atualizar'
+    }
+
+## DELETES ##
 class LutadorDelete(DeleteView):
     model = Lutador
     template_name = 'confirm_delete.html'
@@ -44,16 +66,34 @@ class LutadorDelete(DeleteView):
         'botao': 'Confirmar Exclusão'
     }
 
+class CategoriaPesoDelete(DeleteView):
+    model = CategoriaPeso
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('categoria-list')
 
-# LIST
+    extra_context = {
+        'titulo': 'Excluir Categoria',
+        'botao': 'Sim, excluir!'
+    }
+
+## LISTS ##
 class LutadorList(ListView):
     model = Lutador
-    template_name = 'lutador_list.html'
+    template_name = 'ufc/list/lutador_list.html'
     context_object_name = 'lutadores'
     paginate_by = 10
 
 
-# DETAIL
+class CategoriaPesoList(ListView):
+    model = CategoriaPeso
+    template_name = 'ufc/list/categoria_list.html'
+
+
+## DETAIL ##
 class LutadorDetail(DetailView):
     model = Lutador
-    template_name = 'lutador_detail.html'
+    template_name = 'ufc/detail/lutador_detail.html'
+
+class CategoriaPesoDetail(DetailView):
+    model = CategoriaPeso
+    template_name = 'ufc/detail/categoria.html'
