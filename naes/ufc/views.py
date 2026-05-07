@@ -58,7 +58,7 @@ class CategoriaPesoUpdate(UpdateView):
 ## DELETES ##
 class LutadorDelete(DeleteView):
     model = Lutador
-    template_name = 'confirm_delete.html'
+    template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
     extra_context = {

@@ -30,14 +30,14 @@
       </div>
       <div class="col-lg-4 d-none d-lg-flex justify-content-end">
         <!-- Decorative card mockup -->
-        <div class="p-4 rounded-2xl" style="background:rgba(45,158,107,.15); backdrop-filter:blur(12px); border:2px solid rgba(45,158,107,.3); width:280px;">
-          <div class="text-center">
+        <div class="p-4 rounded-2xl" style="background:rgba(45,158,107,.15); backdrop-filter:blur(12px); border:2px solid rgba(45,158,107,.3); width:280px; ">
+          <div class="text-center ">
             <div style="font-size:3rem; margin-bottom:1rem">🥊</div>
             <p style="color:rgba(255,255,255,.9); font-weight:600; margin-bottom:.5rem">Gerenciar Lutas</p>
             <p style="color:rgba(255,255,255,.6); font-size:.85rem; margin-bottom:1rem">Controle completo de eventos e rankings</p>
-            <div class="d-flex gap-2 justify-content-center">
+            <div class="d-flex gap-2 justify-content-center ">
               <span class="badge bg-success rounded-pill">Fights</span>
-              <span class="badge bg-info rounded-pill">Rankings</span>
+              <span class="badge bg-dark rounded-pill ">Rankings</span>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@
         </div>
       </div>
       <div class="col-lg-6">
-        <div class="card-petrol p-5 bg-gradient">
+        <div class="card-petrol p-5 bg-gradient text-dark">
           <div class="text-center">
             <div style="font-size:4rem;">🔥</div>
             <h3 class="fw-display">O Mundo das Lutas</h3>
@@ -111,7 +111,7 @@
       </p>
     </div>
 
-    <div class="row g-4">
+    <div class="row g-4 text-dark " >
 
       <div class="col-md-6 col-lg-3">
         <div class="card-petrol p-4 text-center">
@@ -212,6 +212,64 @@
 </section>
 
 
+<!-- ── Diagramas ── -->
+<section class="py-5 py-lg-6 bg-surface-alt">
+  <div class="container">
+
+    <div class="text-center mb-5">
+      <h2 class="fw-display">Diagramas do Projeto</h2>
+      <p class="text-secondary">
+        Representação visual das funcionalidades e estrutura do sistema
+      </p>
+    </div>
+
+    <div class="row g-5">
+
+      <!-- Caso de Uso -->
+      <div class="col-lg-6 text-dark">
+
+        <div class="card-petrol p-4 h-100">
+
+          <h4 class="text-center mb-4">
+            <i class="bi bi-diagram-3 me-2"></i>
+            Diagrama de Caso de Uso
+          </h4>
+
+          <img
+            src="{% static 'img/casodeuso.png' %}"
+            class="img-fluid rounded shadow"
+            alt="Diagrama de Caso de Uso"
+          >
+
+        </div>
+
+      </div>
+
+      <!-- Diagrama de Classes -->
+      <div class="col-lg-6 text-dark" >
+
+        <div class="card-petrol p-4 h-100">
+
+          <h4 class="text-center mb-4">
+            <i class="bi bi-boxes me-2"></i>
+            Diagrama de Classes
+          </h4>
+
+          <img
+            src="{% static 'img/diagramaclasses.png' %}"
+            class="img-fluid rounded shadow"
+            alt="Diagrama de Classes"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
 <!-- ── CTA ── -->
 <section class="py-5 text-center bg-petrol-darker text-white">
   <div class="container">
@@ -220,5 +278,7 @@
     <a href="{% url "index" %}" class="btn btn-light">Explorar</a>
   </div>
 </section>
+
+
 
 {% endblock conteudo %}
