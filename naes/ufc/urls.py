@@ -13,4 +13,10 @@ urlpatterns = [
     path('categorias/<int:pk>/editar/', CategoriaPesoUpdate.as_view(), name='categoria-update'),
     path('categorias/<int:pk>/excluir/', CategoriaPesoDelete.as_view(), name='categoria-delete'),
     path('categorias/<int:pk>/', CategoriaPesoDetail.as_view(), name='categoria-detail'),
+
+    path('eventos/', EventoList.as_view(), name='evento-list'),
+    path('eventos/novo/', EventoCreate.as_view(), name='evento-create'),
+    path('eventos/<int:pk>/', EventoDetail.as_view(), name='evento-detail'),
+    path('eventos/editar/<int:pk>/', EventoUpdate.as_view(), name='evento-update'),
+    path('eventos/excluir/<int:pk>/', EventoDelete.as_view(), name='evento-delete'),
 ]

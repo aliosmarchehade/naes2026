@@ -1,0 +1,60 @@
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Eventos</h3>
+
+        <a href="{% url 'evento-create' %}" class="btn btn-danger">
+            Novo Evento
+        </a>
+    </div>
+
+    <table class="table table-dark table-hover">
+
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Local</th>
+                <th>Data</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for evento in object_list %}
+
+            <tr>
+                <td>{{ evento.nome }}</td>
+                <td>{{ evento.local }}</td>
+                <td>{{ evento.data }}</td>
+
+                <td>
+                    <a href="{% url 'evento-detail' evento.pk %}" class="btn btn-secondary btn-sm">Ver</a>
+
+                    <a href="{% url 'evento-update' evento.pk %}" class="btn btn-warning btn-sm">Editar</a>
+
+                    <a href="{% url 'evento-delete' evento.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                </td>
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td colspan="4">
+                    Nenhum evento cadastrado.
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

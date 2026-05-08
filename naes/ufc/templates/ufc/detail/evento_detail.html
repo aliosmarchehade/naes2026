@@ -1,0 +1,132 @@
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- HEADER -->
+                <div class="bg-danger text-white p-3">
+
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                        <div>
+                            <h2 class="fw-bold mb-1">
+                                 {{ object.nome }}
+                            </h2>
+
+                            <p class="mb-0 opacity-75">
+                                Evento oficial do UFC Manager
+                            </p>
+                        </div>
+
+                        <div class="text-end">
+                            <span class="badge bg-dark fs-6 px-3 py-2">
+                                {{ object.data }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body p-5 bg-dark text-light">
+
+                    <div class="row g-4">
+
+                        <!-- LOCAL -->
+                        <div class="col-md-6">
+
+                            <div class="p-4 rounded-4 border h-100"
+                                 style="background:#111; border-color:#222 !important;">
+
+                                <h5 class="fw-bold mb-3 text-danger">
+                                    <i class="bi bi-geo-alt-fill me-2"></i>
+                                    Local do Evento
+                                </h5>
+
+                                <p class="mb-0 fs-5">
+                                    {{ object.local }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DATA -->
+                        <div class="col-md-6">
+
+                            <div class="p-4 rounded-4 border h-100"
+                                 style="background:#111; border-color:#222 !important;">
+
+                                <h5 class="fw-bold mb-3 text-danger">
+                                    <i class="bi bi-calendar-event-fill me-2"></i>
+                                    Data
+                                </h5>
+
+                                <p class="mb-0 fs-5">
+                                    {{ object.data }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DESCRIÇÃO -->
+                        <div class="col-12">
+
+                            <div class="p-4 rounded-4 border"
+                                 style="background:#111; border-color:#222 !important;">
+
+                                <h5 class="fw-bold mb-3 text-danger">
+                                    <i class="bi bi-card-text me-2"></i>
+                                    Descrição
+                                </h5>
+
+                                <p class="mb-0" style="line-height:1.8;">
+                                    {{ object.descricao }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- AÇÕES -->
+            <div class="d-flex justify-content-center gap-3 mt-4">
+
+                <a href="{% url 'evento-update' object.pk %}"
+                   class="btn btn-outline-warning">
+                  Editar
+                </a>
+
+                <a href="{% url 'evento-delete' object.pk %}"
+                   class="btn btn-outline-danger">
+                  Excluir
+                </a>
+
+                <a href="#" class="btn btn-outline-light"
+                   onclick="window.history.back()">
+                  Voltar
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

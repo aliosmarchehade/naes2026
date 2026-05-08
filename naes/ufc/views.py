@@ -1,6 +1,6 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
-from .models import Lutador, CategoriaPeso
+from .models import Lutador, CategoriaPeso, Evento
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 
 
@@ -32,6 +32,17 @@ class CategoriaPesoCreate(CreateView):
         'botao': 'Criar Categoria'
     }
 
+class EventoCreate(CreateView):
+    model = Evento
+    fields = ['nome', 'local', 'data', 'descricao']
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('evento-list')
+
+    extra_context = {
+        'titulo': 'Cadastrar Evento',
+        'botao': 'Cadastrar'
+    }
+
 ## UPDATES ##
 class LutadorUpdate(UpdateView):
     model = Lutador
@@ -52,6 +63,17 @@ class CategoriaPesoUpdate(UpdateView):
 
     extra_context = {
         'titulo': 'Editar Categoria',
+        'botao': 'Atualizar'
+    }
+
+class EventoUpdate(UpdateView):
+    model = Evento
+    fields = ['nome', 'local', 'data', 'descricao']
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('evento-list')
+
+    extra_context = {
+        'titulo': 'Editar Evento',
         'botao': 'Atualizar'
     }
 
@@ -76,6 +98,16 @@ class CategoriaPesoDelete(DeleteView):
         'botao': 'Sim, excluir!'
     }
 
+class EventoDelete(DeleteView):
+    model = Evento
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('evento-list')
+
+    extra_context = {
+        'titulo': 'Excluir Evento',
+        'botao': 'Sim, excluir!'
+    }
+
 ## LISTS ##
 class LutadorList(ListView):
     model = Lutador
@@ -88,6 +120,11 @@ class CategoriaPesoList(ListView):
     model = CategoriaPeso
     template_name = 'ufc/list/categoria_list.html'
 
+    
+class EventoList(ListView):
+    model = Evento
+    template_name = 'ufc/list/evento_list.html'
+
 
 ## DETAIL ##
 class LutadorDetail(DetailView):
@@ -96,4 +133,8 @@ class LutadorDetail(DetailView):
 
 class CategoriaPesoDetail(DetailView):
     model = CategoriaPeso
-    template_name = 'ufc/detail/categoria.html'
+    template_name = 'ufc/detail/categoria_detail.html'
+
+class EventoDetail(DetailView):
+    model = Evento
+    template_name = 'ufc/detail/evento_detail.html'

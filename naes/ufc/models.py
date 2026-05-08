@@ -36,9 +36,7 @@ class Evento(models.Model):
     nome = models.CharField(max_length=100)
     local = models.CharField(max_length=100)
     data = models.DateField()
-
-    cadastrado_em = models.DateTimeField(auto_now_add=True)
-    cadastrado_por = models.ForeignKey(User, on_delete=models.PROTECT)
+    descricao = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.nome} - {self.data}"
