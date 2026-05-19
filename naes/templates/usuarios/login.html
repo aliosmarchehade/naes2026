@@ -1,0 +1,60 @@
+{% extends "website/modelo.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block conteudo %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-5">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body p-5">
+
+                    <h2 class="text-center mb-4 fw-bold">
+                        Login
+                    </h2>
+
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            Usuário ou senha inválidos.
+                        </div>
+                    {% endif %}
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        {{ form|crispy }}
+
+                        <div class="d-grid mt-4">
+                            <button class="btn btn-danger btn-lg">
+                                Entrar
+                            </button>
+                        </div>
+
+                        <div class="d-grid mt-3">
+                            <a href="{% url 'registrar' %}"
+                               class="btn btn-dark btn-lg">
+                        
+                                Criar Conta
+                        
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

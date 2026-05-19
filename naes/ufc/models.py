@@ -46,16 +46,29 @@ class Lutador(models.Model):
 
     cadastrado_em = models.DateTimeField(auto_now_add=True)
     atualizado_em = models.DateTimeField(auto_now=True)
-    cadastrado_por = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True) ## Aqui tirei a obrigatoriedade de estar logado,so para testar e apresentar
+    cadastrado_por = models.ForeignKey(
+    User,
+    on_delete=models.CASCADE,
+    related_name="lutadores"
+) ## Aqui tirei a obrigatoriedade de estar logado,so para testar e apresentar
 
     def __str__(self):
         return f"{self.nome} ({self.apelido})"
 
 
 # EVENTO (tipo UFC 300, fightnights, etc)
+
 class Evento(models.Model):
+
     nome = models.CharField(max_length=100)
     local = models.CharField(max_length=100)
+
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
 
     pais = models.ForeignKey(
         Pais,
@@ -65,6 +78,7 @@ class Evento(models.Model):
     )
 
     data = models.DateField()
+
     descricao = models.TextField(blank=True)
 
     def __str__(self):

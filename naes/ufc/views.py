@@ -1,12 +1,13 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
 from .models import Lutador, CategoriaPeso, Evento, Pais
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 
 
 
 ## CREATES ##
-class LutadorCreate(CreateView):
+class LutadorCreate(LoginRequiredMixin, CreateView):
     model = Lutador
     fields = ['nome', 'apelido', 'pais', 'idade', 'peso', 'categoria']
     template_name = 'ufc/form.html'
@@ -18,10 +19,11 @@ class LutadorCreate(CreateView):
     }
 
     def form_valid(self, form):
+        form.instance.cadastrado_por = self.request.user
         return super().form_valid(form)
 
 
-class CategoriaPesoCreate(CreateView):
+class CategoriaPesoCreate(LoginRequiredMixin, CreateView):
     model = CategoriaPeso
     fields = ['nome', 'peso_maximo']
     template_name = 'ufc/form.html'
@@ -32,7 +34,7 @@ class CategoriaPesoCreate(CreateView):
         'botao': 'Criar Categoria'
     }
 
-class EventoCreate(CreateView):
+class EventoCreate(LoginRequiredMixin, CreateView):
     model = Evento
     fields = ['nome', 'pais', 'local', 'data', 'descricao']
     template_name = 'ufc/form.html'
@@ -43,7 +45,11 @@ class EventoCreate(CreateView):
         'botao': 'Cadastrar'
     }
 
-class PaisCreate(CreateView):
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        return super().form_valid(form)
+
+class PaisCreate(LoginRequiredMixin, CreateView):
     model = Pais
     fields = ['nome', 'sigla']
     template_name = 'ufc/form.html'
@@ -55,8 +61,12 @@ class PaisCreate(CreateView):
     }
 
 ## UPDATES ##
-class LutadorUpdate(UpdateView):
+class LutadorUpdate(LoginRequiredMixin, UpdateView):
     model = Lutador
+    def get_queryset(self):
+        return Lutador.objects.filter(
+            cadastrado_por=self.request.user
+        )
     fields = ['nome', 'apelido', 'pais' , 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
@@ -66,7 +76,7 @@ class LutadorUpdate(UpdateView):
         'botao': 'Atualizar'
     }
 
-class CategoriaPesoUpdate(UpdateView):
+class CategoriaPesoUpdate(LoginRequiredMixin, UpdateView):
     model = CategoriaPeso
     fields = ['nome', 'peso_maximo']
     template_name = 'ufc/form.html'
@@ -77,7 +87,7 @@ class CategoriaPesoUpdate(UpdateView):
         'botao': 'Atualizar'
     }
 
-class EventoUpdate(UpdateView):
+class EventoUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Evento
     fields = ['nome', 'pais','local', 'data', 'descricao']
     template_name = 'ufc/form.html'
@@ -88,8 +98,11 @@ class EventoUpdate(UpdateView):
         'botao': 'Atualizar'
     }
 
+    def test_func(self):
+        return self.get_object().usuario == self.request.user
 
-class PaisUpdate(UpdateView):
+
+class PaisUpdate(LoginRequiredMixin, UpdateView):
     model = Pais
     fields = ['nome', 'sigla']
     template_name = 'ufc/form.html'
@@ -101,8 +114,13 @@ class PaisUpdate(UpdateView):
     }
 
 ## DELETES ##
-class LutadorDelete(DeleteView):
+class LutadorDelete(LoginRequiredMixin, DeleteView):
     model = Lutador
+
+    def get_queryset(self):
+        return Lutador.objects.filter(
+            cadastrado_por=self.request.user
+        )
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
@@ -111,7 +129,7 @@ class LutadorDelete(DeleteView):
         'botao': 'Confirmar Exclusão'
     }
 
-class CategoriaPesoDelete(DeleteView):
+class CategoriaPesoDelete(LoginRequiredMixin, DeleteView):
     model = CategoriaPeso
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('categoria-list')
@@ -121,7 +139,7 @@ class CategoriaPesoDelete(DeleteView):
         'botao': 'Sim, excluir!'
     }
 
-class EventoDelete(DeleteView):
+class EventoDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Evento
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('evento-list')
@@ -131,7 +149,10 @@ class EventoDelete(DeleteView):
         'botao': 'Sim, excluir!'
     }
 
-class PaisDelete(DeleteView):
+    def test_func(self):
+        return self.get_object().usuario == self.request.user
+
+class PaisDelete(LoginRequiredMixin, DeleteView):
     model = Pais
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('pais-list')
