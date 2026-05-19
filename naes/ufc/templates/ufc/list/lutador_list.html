@@ -26,6 +26,7 @@
           <tr style="color:#ff4d4d;">
             <th>Nome</th>
             <th>Apelido</th>
+            <th>País</th>
             <th>Idade</th>
             <th>Peso</th>
             <th>Categoria</th>
@@ -40,9 +41,15 @@
           <tr>
             <td>{{ lutador.nome }}</td>
             <td>{{ lutador.apelido|default:"-" }}</td>
+            <td>
+              <img src="https://flagcdn.com/24x18/{{ lutador.pais.sigla|lower }}.png"
+                   width="24"
+                   class="me-2">
+            </td>
             <td>{{ lutador.idade }}</td>
             <td>{{ lutador.peso }} kg</td>
             <td>{{ lutador.categoria }}</td>
+            
 
             <td>
               <span style="color:#4caf50;">{{ lutador.vitorias }}</span> /

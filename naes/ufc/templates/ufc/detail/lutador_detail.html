@@ -16,17 +16,34 @@
             {{ object.nome }}
           </h2>
 
+          
+
           {% if object.apelido %}
             <p style="color:#ff4d4d;" class="mb-0">
               "{{ object.apelido }}"
             </p>
+          </BR>
+            <p>
+          
+              <img src="https://flagsapi.com/{{ object.pais.sigla }}/flat/24.png"
+                   width="24">
+          
+              {{ object.pais.nome }}
+          
+          </p>
+
+
           {% endif %}
+          
         </div>
 
         <hr style="border-color:#333;">
 
         <!-- INFORMAÇÕES -->
         <div class="row g-4 text-white">
+
+          
+          
 
           <div class="col-md-6">
             <small class="text-secondary">Idade</small>
@@ -37,19 +54,24 @@
             <small class="text-secondary">Peso</small>
             <p class="mb-0 fs-5">{{ object.peso }} kg</p>
           </div>
+          
 
           <div class="col-md-6">
             <small class="text-secondary">Categoria</small>
             <p class="mb-0 fs-5">{{ object.categoria.nome }}</p>
           </div>
 
+          
           <div class="col-md-6">
             <small class="text-secondary">Record</small>
             <p class="mb-0 fs-5">
               <span style="color:#4caf50;">{{ object.vitorias }}</span> -
               <span style="color:#f44336;">{{ object.derrotas }}</span>
             </p>
+            
           </div>
+
+          
 
         </div>
 
@@ -62,6 +84,7 @@
             <small>Cadastrado por</small>
             <p class="mb-0">{{ object.cadastrado_por.username }}</p>
           </div>
+          
 
           <div class="col-md-6">
             <small>ID</small>

@@ -1,6 +1,6 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
-from .models import Lutador, CategoriaPeso, Evento
+from .models import Lutador, CategoriaPeso, Evento, Pais
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 
 
@@ -8,7 +8,7 @@ from .models import Lutador, CategoriaPeso, Evento
 ## CREATES ##
 class LutadorCreate(CreateView):
     model = Lutador
-    fields = ['nome', 'apelido', 'idade', 'peso', 'categoria']
+    fields = ['nome', 'apelido', 'pais', 'idade', 'peso', 'categoria']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
@@ -34,7 +34,7 @@ class CategoriaPesoCreate(CreateView):
 
 class EventoCreate(CreateView):
     model = Evento
-    fields = ['nome', 'local', 'data', 'descricao']
+    fields = ['nome', 'pais', 'local', 'data', 'descricao']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('evento-list')
 
@@ -43,10 +43,21 @@ class EventoCreate(CreateView):
         'botao': 'Cadastrar'
     }
 
+class PaisCreate(CreateView):
+    model = Pais
+    fields = ['nome', 'sigla']
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('pais-list')
+
+    extra_context = {
+        'titulo': 'Cadastrar País',
+        'botao': 'Cadastrar'
+    }
+
 ## UPDATES ##
 class LutadorUpdate(UpdateView):
     model = Lutador
-    fields = ['nome', 'apelido', 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
+    fields = ['nome', 'apelido', 'pais' , 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
@@ -68,12 +79,24 @@ class CategoriaPesoUpdate(UpdateView):
 
 class EventoUpdate(UpdateView):
     model = Evento
-    fields = ['nome', 'local', 'data', 'descricao']
+    fields = ['nome', 'pais','local', 'data', 'descricao']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('evento-list')
 
     extra_context = {
         'titulo': 'Editar Evento',
+        'botao': 'Atualizar'
+    }
+
+
+class PaisUpdate(UpdateView):
+    model = Pais
+    fields = ['nome', 'sigla']
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('pais-list')
+
+    extra_context = {
+        'titulo': 'Editar País',
         'botao': 'Atualizar'
     }
 
@@ -108,6 +131,16 @@ class EventoDelete(DeleteView):
         'botao': 'Sim, excluir!'
     }
 
+class PaisDelete(DeleteView):
+    model = Pais
+    template_name = 'ufc/form.html'
+    success_url = reverse_lazy('pais-list')
+
+    extra_context = {
+        'titulo': 'Excluir País',
+        'botao': 'Sim, excluir!'
+    }
+
 ## LISTS ##
 class LutadorList(ListView):
     model = Lutador
@@ -126,6 +159,11 @@ class EventoList(ListView):
     template_name = 'ufc/list/evento_list.html'
 
 
+class PaisList(ListView):
+    model = Pais
+    template_name = 'ufc/list/pais_list.html'
+
+
 ## DETAIL ##
 class LutadorDetail(DetailView):
     model = Lutador
@@ -138,3 +176,7 @@ class CategoriaPesoDetail(DetailView):
 class EventoDetail(DetailView):
     model = Evento
     template_name = 'ufc/detail/evento_detail.html'
+
+class PaisDetail(DetailView):
+    model = Pais
+    template_name = 'ufc/detail/pais_detail.html'

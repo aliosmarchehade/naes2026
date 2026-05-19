@@ -10,6 +10,20 @@ class CategoriaPeso(models.Model):
 
     def __str__(self):
         return f"{self.nome} ({self.peso_maximo}kg)"
+    
+# PAIS
+
+class Pais(models.Model):
+
+    nome = models.CharField(max_length=100)
+
+    sigla = models.CharField(max_length=2)
+
+    bandeira = models.URLField(blank=True, null=True)
+
+
+    def __str__(self):
+        return self.nome
 
 
 # LUTADOR
@@ -19,6 +33,13 @@ class Lutador(models.Model):
     idade = models.PositiveIntegerField() #só numeros positivos
     peso = models.DecimalField(max_digits=5, decimal_places=2)
     categoria = models.ForeignKey(CategoriaPeso, on_delete=models.PROTECT)
+
+    pais = models.ForeignKey(
+        Pais,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     vitorias = models.PositiveIntegerField(default=0)
     derrotas = models.PositiveIntegerField(default=0)
@@ -35,6 +56,14 @@ class Lutador(models.Model):
 class Evento(models.Model):
     nome = models.CharField(max_length=100)
     local = models.CharField(max_length=100)
+
+    pais = models.ForeignKey(
+        Pais,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
     data = models.DateField()
     descricao = models.TextField(blank=True)
 
@@ -73,3 +102,4 @@ class Luta(models.Model):
 
     def __str__(self):
         return f"{self.lutador_1} vs {self.lutador_2} - {self.evento}"
+

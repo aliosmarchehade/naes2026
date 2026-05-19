@@ -19,4 +19,10 @@ urlpatterns = [
     path('eventos/<int:pk>/', EventoDetail.as_view(), name='evento-detail'),
     path('eventos/editar/<int:pk>/', EventoUpdate.as_view(), name='evento-update'),
     path('eventos/excluir/<int:pk>/', EventoDelete.as_view(), name='evento-delete'),
+
+    path('paises/', PaisList.as_view(), name='pais-list'),
+    path('paises/novo/', PaisCreate.as_view(), name='pais-create'),
+    path('paises/<int:pk>/editar/', PaisUpdate.as_view(), name='pais-update'),
+    path('paises/<int:pk>/excluir/', PaisDelete.as_view(), name='pais-delete'),
+    path('paises/<int:pk>/', PaisDetail.as_view(), name='pais-detail'),
 ]
