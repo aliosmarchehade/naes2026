@@ -2,6 +2,8 @@ from django.views.generic import CreateView, UpdateView, DeleteView, ListView, D
 from django.urls import reverse_lazy
 from .models import Lutador, CategoriaPeso, Evento, Pais
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 
 
@@ -219,3 +221,34 @@ class EventoDetail(DetailView):
 class PaisDetail(DetailView):
     model = Pais
     template_name = 'ufc/detail/pais_detail.html'
+
+
+
+
+class RankingView(TemplateView):
+
+    template_name = 'ufc/ranking.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        categorias = CategoriaPeso.objects.all()
+
+        ranking = []
+
+        for categoria in categorias:
+
+            lutadores = categoria.lutador_set.all().order_by(
+                '-vitorias',
+                'derrotas'
+            )
+
+            ranking.append({
+                'categoria': categoria,
+                'lutadores': lutadores
+            })
+
+        context['ranking'] = ranking
+
+        return context

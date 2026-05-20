@@ -1,0 +1,195 @@
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+
+<section class="py-5">
+
+    <div class="container">
+
+        <!-- TÍTULO -->
+        <div class="text-center mb-5">
+
+            <h1 class="fw-display text-white mb-3">
+                🏆 Ranking UFC
+            </h1>
+
+            <p class="text-secondary">
+                Rankings organizados por categoria
+            </p>
+
+        </div>
+
+        {% for grupo in ranking %}
+
+        <!-- CATEGORIA -->
+        <div class="mb-5">
+
+            <div class="d-flex align-items-center mb-4">
+
+                <div class="bg-danger rounded-circle me-3"
+                     style="width:14px;height:14px;">
+                </div>
+
+                <h2 class="text-white fw-bold mb-0">
+                    {{ grupo.categoria.nome }}
+                </h2>
+
+            </div>
+
+            <!-- LISTA -->
+            <div class="row g-4">
+
+                {% for lutador in grupo.lutadores %}
+
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="card-petrol p-4 h-100 position-relative overflow-hidden"
+     style="
+     background:#1e1e1e;
+     border:1px solid #2d2d2d;
+     ">
+
+                        <!-- POSIÇÃO -->
+                        <div class="position-absolute top-0 end-0 p-3">
+
+                            {% if forloop.counter == 1 %}
+                                <span style="font-size:1.8rem;">🥇</span>
+
+                            {% elif forloop.counter == 2 %}
+                                <span style="font-size:1.8rem;">🥈</span>
+
+                            {% elif forloop.counter == 3 %}
+                                <span style="font-size:1.8rem;">🥉</span>
+
+                            {% else %}
+
+                                <span class="badge bg-dark">
+                                    #{{ forloop.counter }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- FOTO/ÍCONE -->
+                        <div class="text-center mb-3">
+
+                            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                                 style="
+                                 width:90px;
+                                 height:90px;
+                                 background:#1f1f1f;
+                                 font-size:2.5rem;
+                                 border:3px solid #dc3545;
+                                 ">
+
+                                🥊
+
+                            </div>
+
+                        </div>
+
+                        <!-- NOME -->
+                        <div class="text-center">
+
+                            <h4 class="text-white fw-bold mb-1">
+                                {{ lutador.nome }}
+                            </h4>
+
+                            {% if lutador.apelido %}
+                            <p class="text-danger mb-3">
+                                "{{ lutador.apelido }}"
+                            </p>
+                            {% endif %}
+
+                        </div>
+
+                        <!-- RECORD -->
+                        <div class="d-flex justify-content-center gap-4 mb-4">
+
+                            <div class="text-center">
+
+                                <small class="text-secondary d-block">
+                                    Vitórias
+                                </small>
+
+                                <span class="text-success fw-bold fs-4">
+                                    {{ lutador.vitorias }}
+                                </span>
+
+                            </div>
+
+                            <div class="text-center">
+
+                                <small class="text-secondary d-block">
+                                    Derrotas
+                                </small>
+
+                                <span class="text-danger fw-bold fs-4">
+                                    {{ lutador.derrotas }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RECORD -->
+                        <div class="text-center mb-3">
+
+                            <span class="badge bg-dark px-3 py-2 fs-6">
+
+                                Record:
+                                {{ lutador.vitorias }}-{{ lutador.derrotas }}
+
+                            </span>
+
+                        </div>
+
+                        <!-- PAÍS -->
+                        {% if lutador.pais %}
+
+                        <div class="text-center text-secondary">
+
+                            <img src="https://flagsapi.com/{{ lutador.pais.sigla }}/flat/24.png">
+
+                            {{ lutador.pais.nome }}
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="col-12">
+
+                    <div class="card-petrol p-4 h-100 position-relative overflow-hidden"
+     style="
+     background:#1e1e1e;
+     border:1px solid #2d2d2d;
+     ">
+
+                        <h5 class="text-white">
+                            Nenhum lutador cadastrado
+                        </h5>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from .views import RankingView
 
 urlpatterns = [
     path('lutadores/', LutadorList.as_view(), name='lutador-list'),
@@ -25,4 +26,9 @@ urlpatterns = [
     path('paises/<int:pk>/editar/', PaisUpdate.as_view(), name='pais-update'),
     path('paises/<int:pk>/excluir/', PaisDelete.as_view(), name='pais-delete'),
     path('paises/<int:pk>/', PaisDetail.as_view(), name='pais-detail'),
+
+    path('ranking/',RankingView.as_view(),name='ranking'),
 ]
+
+
+
