@@ -2,192 +2,484 @@
 {% load static %}
 
 {% block hero %}
-<!-- HERO UFC -->
-<section class="hero py-5">
-  <div class="hero-noise"></div>
-  <div class="container py-5">
-    <div class="row align-items-center">
-      
+
+<!-- HERO -->
+<section class="hero-section position-relative overflow-hidden">
+
+  <div class="hero-overlay"></div>
+
+  <div class="container py-5 position-relative">
+
+    <div class="row align-items-center min-vh-75">
+
+      <!-- TEXTO -->
       <div class="col-lg-7">
-        <span class="badge bg-petrol-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-3 d-inline-block"
-        style="font-size: 1.2rem;">
-          
-          🥊 Sistema de Lutas
+
+        <span class="badge rounded-pill px-4 py-2 mb-4 hero-badge">
+          🥊 Plataforma de Gerenciamento UFC
         </span>
 
-        <h1 class="display-4 fw-display text-white mb-3">
-          Gerencie eventos de <br>
-          <span style="color:var(--petrol-lighter)">UFC com facilidade</span>
+        <h1 class="display-3 fw-bold text-white mb-4 hero-title">
+          Controle completo de
+          <span class="text-danger">
+            eventos, lutas
+          </span>
+          e atletas
         </h1>
 
-        <p class="text-white-75 mb-4" style="max-width:560px;">
-          Cadastre lutadores, organize eventos, crie combates e acompanhe rankings automaticamente.
+        <p class="lead text-light opacity-75 mb-5 hero-text">
+          Organize cards, registre lutadores, acompanhe estatísticas
+          e gerencie eventos profissionais de MMA em um único sistema.
         </p>
 
-        <div class="d-flex gap-3">
-          <a href="{% url "sobre" %}" class="btn btn-light fw-semibold px-4 rounded-2">
-            Sobre o sistema
+        <div class="d-flex flex-wrap gap-3">
+
+          <a href="{% url 'lutador-list' %}"
+             class="btn btn-danger btn-lg px-4 rounded-4 shadow">
+            <i class="bi bi-people-fill me-2"></i>
+            Ver Lutadores
           </a>
 
-          <a href="{% url "contato" %}" class="btn btn-auth px-4 rounded-2">
-            Contato
-          </a>
-        </div>
-      </div>
-
-      <div class="col-lg-5 d-none d-lg-block">
-        <div class="card-petrol p-4 rounded-2xl text-center"
-             style="background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08)">
-          
-          <div style="font-size:3rem">🥊</div>
-          <h5 class="fw-display text-white mt-3">Gerencie Combates</h5>
-
-          <p class="text-white-50 mb-3">
-            Crie lutas, registre vencedores e atualize rankings automaticamente.
-          </p>
-
-          <a href="{% url "index" %}" class="btn btn-primary btn-sm">
+          <a href="{% url 'evento-list' %}"
+             class="btn btn-outline-light btn-lg px-4 rounded-4">
+            <i class="bi bi-calendar-event me-2"></i>
             Ver Eventos
           </a>
+
         </div>
+
+      </div>
+
+      <!-- CARD LATERAL -->
+      <div class="col-lg-5 mt-5 mt-lg-0">
+
+        <div class="hero-card p-4 rounded-5">
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+              <small class="text-secondary">
+                Sistema ativo
+              </small>
+
+              <h3 class="text-white fw-bold mb-0">
+                UFC Manager
+              </h3>
+            </div>
+
+            <div class="hero-icon">
+              🥊
+            </div>
+
+          </div>
+
+          <div class="row g-3">
+
+            <div class="col-6">
+
+              <div class="mini-stat">
+                <h2>{{ total_lutadores }}</h2>
+                <span>Lutadores</span>
+              </div>
+
+            </div>
+
+            <div class="col-6">
+
+              <div class="mini-stat">
+                <h2>{{ total_eventos }}</h2>
+                <span>Eventos</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <hr class="border-secondary opacity-25 my-4">
+
+          <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+              <small class="text-secondary">
+                Último cadastro
+              </small>
+
+              {% if ultimos_lutadores %}
+                <p class="text-white mb-0 fw-semibold">
+                  {{ ultimos_lutadores.0.nome }}
+                </p>
+              {% endif %}
+            </div>
+
+            <span class="badge bg-danger px-3 py-2 rounded-pill">
+              ATIVO
+            </span>
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
+
   </div>
+
 </section>
+
 {% endblock hero %}
 
 
 {% block conteudo %}
 
-<!-- FUNCIONALIDADES -->
-<section class="py-5 bg-surface-alt">
-  <div class="row g-3"> <!-- antes era g-4 -->
+<!-- FEATURES -->
+<section class="py-5 bg-black">
 
-    <!-- CARD 1 -->
-    <div class="col-md-4">
-      <div class="card-petrol p-3 h-100 text-center">
-  
-        <div style="font-size:2rem" class="mb-2">🧍</div>
-  
-        <div class="bg-white p-2 rounded-3">
-          <h4 class="fw-display mb-1 text-dark">Cadastro de Lutadores</h4>
-          <p class="mb-0 text-dark" style="font-size:1rem">
-            Registre atletas e categorias de peso.
-          </p>
-        </div>
-  
-      </div>
-    </div>
-  
-    <!-- CARD 2 -->
-    <div class="col-md-4">
-      <div class="card-petrol p-3 h-100 text-center">
-  
-        <div style="font-size:1.6rem" class="mb-2">🗓️</div>
-  
-        <div class="bg-white p-2 rounded-3">
-          <h4 class="fw-display mb-1 text-dark">Eventos</h4>
-          <p class="mb-0 text-dark" style="font-size:1rem">
-            Organize eventos e cards de luta.
-          </p>
-        </div>
-  
-      </div>
-    </div>
-  
-    <!-- CARD 3 -->
-    <div class="col-md-4">
-      <div class="card-petrol p-3 h-100 text-center">
-  
-        <div style="font-size:1.6rem" class="mb-2">🥊</div>
-  
-        <div class="bg-white p-2 rounded-3">
-          <h4 class="fw-display mb-1 text-dark">Gerenciamento de Lutas</h4>
-          <p class="mb-0 text-dark" style="font-size:1rem">
-            Defina combates e registre resultados.
-          </p>
-        </div>
-  
-      </div>
-    </div>
-  
-  </div>
-</section>
+  <div class="container">
 
+    <div class="text-center mb-5">
 
-<!-- COMO FUNCIONA -->
-<section class="py-5 bg-surface">
-  <div class="container text-center">
-    <h2 class="fw-display mb-5">Como Funciona</h2>
+      <span class="text-danger fw-semibold">
+        FUNCIONALIDADES
+      </span>
+
+      <h2 class="display-5 fw-bold text-white mt-2">
+        Tudo que você precisa
+      </h2>
+
+      <p class="text-secondary">
+        Gerencie sua organização de MMA com recursos profissionais.
+      </p>
+
+    </div>
 
     <div class="row g-4">
 
-      <div class="col-md-3">
-        <h4>1</h4>
-        <p>Cadastre lutadores</p>
+      <!-- CARD -->
+      <div class="col-lg-4">
+
+        <div class="feature-card h-100">
+
+          <div class="feature-icon bg-danger-subtle text-danger">
+            <i class="bi bi-person-badge-fill"></i>
+          </div>
+
+          <h4 class="text-white mt-4 mb-3">
+            Gestão de Lutadores
+          </h4>
+
+          <p class="text-secondary">
+            Cadastre atletas, categorias de peso, países,
+            estatísticas e histórico completo.
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="col-md-3">
-        <h4>2</h4>
-        <p>Crie eventos</p>
+      <!-- CARD -->
+      <div class="col-lg-4">
+
+        <div class="feature-card h-100">
+
+          <div class="feature-icon bg-primary-subtle text-primary">
+            <i class="bi bi-calendar2-event-fill"></i>
+          </div>
+
+          <h4 class="text-white mt-4 mb-3">
+            Organização de Eventos
+          </h4>
+
+          <p class="text-secondary">
+            Crie eventos completos com cards,
+            localização, datas e informações detalhadas.
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="col-md-3">
-        <h4>3</h4>
-        <p>Defina lutas</p>
-      </div>
+      <!-- CARD -->
+      <div class="col-lg-4">
 
-      <div class="col-md-3">
-        <h4>4</h4>
-        <p>Atualize rankings</p>
+        <div class="feature-card h-100">
+
+          <div class="feature-icon bg-warning-subtle text-warning">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+
+          <h4 class="text-white mt-4 mb-3">
+            Controle de Resultados
+          </h4>
+
+          <p class="text-secondary">
+            Registre vencedores, métodos de vitória
+            e mantenha rankings atualizados automaticamente.
+          </p>
+
+        </div>
+
       </div>
 
     </div>
+
   </div>
+
 </section>
 
 
-<!-- ESTATÍSTICAS -->
-<section class="py-5 bg-dark text-center text-white">
+<!-- ÚLTIMOS LUTADORES -->
+<section class="py-5 bg-secondary">
+
   <div class="container">
-    <div class="row">
 
-      <div class="col-md-3">
-        <h3>+50</h3>
-        <p>Lutadores</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+      <div>
+
+        <span class="text-danger fw-semibold">
+          ÚLTIMOS CADASTROS
+        </span>
+
+        <h2 class="fw-bold text-white">
+          Lutadores Recentes
+        </h2>
+
       </div>
 
-      <div class="col-md-3">
-        <h3>+20</h3>
-        <p>Lutas</p>
-      </div>
-
-      <div class="col-md-3">
-        <h3>+10</h3>
-        <p>Eventos</p>
-      </div>
-
-      <div class="col-md-3">
-        <h3>100%</h3>
-        <p>Controle</p>
-      </div>
+      <a href="{% url 'lutador-list' %}"
+         class="btn btn-outline-light rounded-4">
+        Ver todos
+      </a>
 
     </div>
+
+    <div class="row g-4">
+
+      {% for lutador in ultimos_lutadores %}
+
+      <div class="col-lg-4 col-md-6">
+
+        <div class="fighter-card h-100">
+
+          <div class="d-flex justify-content-between align-items-start mb-3">
+
+            <div>
+
+              <h4 class="text-white mb-1">
+                {{ lutador.nome }}
+              </h4>
+
+              {% if lutador.apelido %}
+                <span class="text-danger">
+                  "{{ lutador.apelido }}"
+                </span>
+              {% endif %}
+
+            </div>
+
+            {% if lutador.pais %}
+            <img src="https://flagsapi.com/{{ lutador.pais.sigla }}/flat/32.png"
+                 width="32">
+            {% endif %}
+
+          </div>
+
+          <div class="fighter-info">
+
+            <div>
+              <small>Categoria</small>
+              <p>{{ lutador.categoria.nome }}</p>
+            </div>
+
+            <div>
+              <small>Record</small>
+              <p>
+                {{ lutador.vitorias }}-{{ lutador.derrotas }}
+              </p>
+            </div>
+
+          </div>
+
+          <a href="{% url 'lutador-detail' lutador.pk %}"
+             class="btn btn-danger w-100 rounded-4 mt-4">
+            Ver Perfil
+          </a>
+
+        </div>
+
+      </div>
+
+      {% empty %}
+
+      <div class="col-12">
+
+        <div class="alert alert-dark border-secondary text-center text-light">
+          Nenhum lutador cadastrado ainda.
+        </div>
+
+      </div>
+
+      {% endfor %}
+
+    </div>
+
   </div>
+
 </section>
 
 
 <!-- CTA -->
-<section class="py-5 bg-petrol-darker text-center text-white">
-  <div class="container">
-    <h2>Comece agora</h2>
-    <p>Gerencie seu sistema de lutas com eficiência</p>
+<section class="py-5 bg-black text-center">
 
-    <a href="{% url "sobre" %}" class="btn btn-light">
-      Saiba mais
-    </a>
+  <div class="container">
+
+    <div class="cta-box p-5 rounded-5">
+
+      <span class="badge bg-danger px-3 py-2 rounded-pill mb-3">
+        UFC MANAGER
+      </span>
+
+      <h2 class="display-5 fw-bold text-white mb-3">
+        Pronto para começar?
+      </h2>
+
+      <p class="text-secondary mb-4">
+        Cadastre lutadores, crie eventos e organize
+        combates profissionais agora mesmo.
+      </p>
+
+      <a href="{% url 'registrar' %}"
+         class="btn btn-danger btn-lg px-5 rounded-4">
+        Criar Conta
+      </a>
+
+    </div>
+
   </div>
+
 </section>
+
+
+<!-- ESTILOS -->
+<style>
+
+.hero-section{
+    background:
+    linear-gradient(to right, rgba(0,0,0,.9), rgba(0,0,0,.6)),
+    url('https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+}
+
+.min-vh-75{
+    min-height:75vh;
+}
+
+.hero-badge{
+    background: rgba(255,255,255,.1);
+    color:#fff;
+    border:1px solid rgba(255,255,255,.15);
+    backdrop-filter: blur(10px);
+}
+
+.hero-title{
+    line-height:1.1;
+}
+
+.hero-card{
+    background: rgba(15,15,15,.8);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(14px);
+    box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+
+.hero-icon{
+    width:60px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:20px;
+    background:#dc3545;
+    font-size:1.5rem;
+}
+
+.mini-stat{
+    background:#151515;
+    border:1px solid #262626;
+    border-radius:20px;
+    padding:20px;
+    text-align:center;
+}
+
+.mini-stat h2{
+    color:#fff;
+    margin:0;
+    font-weight:bold;
+}
+
+.mini-stat span{
+    color:#888;
+}
+
+.feature-card{
+    background:#111;
+    border:1px solid #222;
+    border-radius:28px;
+    padding:35px;
+    transition:.3s;
+}
+
+.feature-card:hover{
+    transform:translateY(-8px);
+    border-color:#dc3545;
+}
+
+.feature-icon{
+    width:70px;
+    height:70px;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.8rem;
+}
+
+.fighter-card{
+    background:#111;
+    border:1px solid #222;
+    border-radius:28px;
+    padding:30px;
+    transition:.3s;
+}
+
+.fighter-card:hover{
+    transform:translateY(-5px);
+    border-color:#dc3545;
+}
+
+.fighter-info{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.fighter-info small{
+    color:#777;
+}
+
+.fighter-info p{
+    color:#fff;
+    margin:0;
+    font-weight:600;
+}
+
+.cta-box{
+    background:linear-gradient(135deg,#111,#1a1a1a);
+    border:1px solid #222;
+}
+
+</style>
 
 {% endblock conteudo %}

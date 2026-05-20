@@ -1,7 +1,7 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
 from .models import Lutador, CategoriaPeso, Evento, Pais
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 
 
@@ -64,9 +64,13 @@ class PaisCreate(LoginRequiredMixin, CreateView):
 class LutadorUpdate(LoginRequiredMixin, UpdateView):
     model = Lutador
     def get_queryset(self):
+
+        if self.request.user.is_superuser:
+            return Lutador.objects.all()
+
         return Lutador.objects.filter(
             cadastrado_por=self.request.user
-        )
+    )
     fields = ['nome', 'apelido', 'pais' , 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
@@ -87,7 +91,7 @@ class CategoriaPesoUpdate(LoginRequiredMixin, UpdateView):
         'botao': 'Atualizar'
     }
 
-class EventoUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EventoUpdate(LoginRequiredMixin, UpdateView):
     model = Evento
     fields = ['nome', 'pais','local', 'data', 'descricao']
     template_name = 'ufc/form.html'
@@ -98,8 +102,14 @@ class EventoUpdate(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         'botao': 'Atualizar'
     }
 
-    def test_func(self):
-        return self.get_object().usuario == self.request.user
+    def get_queryset(self):
+
+        if self.request.user.is_superuser:
+            return Evento.objects.all()
+
+        return Evento.objects.filter(
+            usuario=self.request.user
+        )
 
 
 class PaisUpdate(LoginRequiredMixin, UpdateView):
@@ -118,6 +128,9 @@ class LutadorDelete(LoginRequiredMixin, DeleteView):
     model = Lutador
 
     def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Lutador.objects.all()
+
         return Lutador.objects.filter(
             cadastrado_por=self.request.user
         )
@@ -139,7 +152,7 @@ class CategoriaPesoDelete(LoginRequiredMixin, DeleteView):
         'botao': 'Sim, excluir!'
     }
 
-class EventoDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class EventoDelete(LoginRequiredMixin, DeleteView):
     model = Evento
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('evento-list')
@@ -149,8 +162,14 @@ class EventoDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         'botao': 'Sim, excluir!'
     }
 
-    def test_func(self):
-        return self.get_object().usuario == self.request.user
+    def get_queryset(self):
+
+        if self.request.user.is_superuser:
+            return Evento.objects.all()
+
+        return Evento.objects.filter(
+            usuario=self.request.user
+        )
 
 class PaisDelete(LoginRequiredMixin, DeleteView):
     model = Pais
@@ -166,8 +185,7 @@ class PaisDelete(LoginRequiredMixin, DeleteView):
 class LutadorList(ListView):
     model = Lutador
     template_name = 'ufc/list/lutador_list.html'
-    context_object_name = 'lutadores'
-    paginate_by = 10
+    context_object_name = 'lutadores'   
 
 
 class CategoriaPesoList(ListView):
