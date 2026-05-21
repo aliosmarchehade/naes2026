@@ -41,6 +41,13 @@ class Lutador(models.Model):
         blank=True
     )
 
+     # FOTO DO LUTADOR
+    foto = models.ImageField(
+        upload_to='lutadores/',
+        blank=True,
+        null=True
+    )
+
     vitorias = models.PositiveIntegerField(default=0)
     derrotas = models.PositiveIntegerField(default=0)
 
@@ -49,7 +56,9 @@ class Lutador(models.Model):
     cadastrado_por = models.ForeignKey(
     User,
     on_delete=models.CASCADE,
-    related_name="lutadores"
+    related_name="lutadores",
+    null=True,
+    blank=True
 ) ## Aqui tirei a obrigatoriedade de estar logado,so para testar e apresentar
 
     def __str__(self):

@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 ## CREATES ##
 class LutadorCreate(LoginRequiredMixin, CreateView):
     model = Lutador
-    fields = ['nome', 'apelido', 'pais', 'idade', 'peso', 'categoria']
+    fields = ['nome', 'apelido', 'foto', 'pais', 'idade', 'peso', 'categoria']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
@@ -73,7 +73,7 @@ class LutadorUpdate(LoginRequiredMixin, UpdateView):
         return Lutador.objects.filter(
             cadastrado_por=self.request.user
     )
-    fields = ['nome', 'apelido', 'pais' , 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
+    fields = ['nome', 'apelido', 'foto', 'pais' , 'idade', 'peso', 'categoria', 'vitorias', 'derrotas']
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 

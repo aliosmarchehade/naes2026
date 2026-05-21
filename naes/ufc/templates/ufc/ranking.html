@@ -1,5 +1,7 @@
 {% extends "website/modelo.html" %}
 
+{% load static %}
+
 {% block conteudo %}
 
 <section class="py-5">
@@ -53,41 +55,63 @@
                         <div class="position-absolute top-0 end-0 p-3">
 
                             {% if forloop.counter == 1 %}
-                                <span style="font-size:1.8rem;">🥇</span>
+                            <img
+                            src="{% static 'img/cinturao.png' %}"
+                            width="100"
+                            alt="Campeão"
+                        >
 
                             {% elif forloop.counter == 2 %}
-                                <span style="font-size:1.8rem;">🥈</span>
+                                <span style="font-size:1.8rem;">#1</span>
 
                             {% elif forloop.counter == 3 %}
-                                <span style="font-size:1.8rem;">🥉</span>
+                                <span style="font-size:1.8rem;">#2</span>
 
                             {% else %}
 
                                 <span class="badge bg-dark">
-                                    #{{ forloop.counter }}
+                                    #{{ forloop.counter|add:"-1"}}
                                 </span>
 
                             {% endif %}
 
                         </div>
 
-                        <!-- FOTO/ÍCONE -->
-                        <div class="text-center mb-3">
+                  
+                       <!-- FOTO -->
+<div class="text-center mb-3">
 
-                            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                                 style="
-                                 width:90px;
-                                 height:90px;
-                                 background:#1f1f1f;
-                                 font-size:2.5rem;
-                                 border:3px solid #dc3545;
-                                 ">
+    <div class="rounded-circle mx-auto overflow-hidden"
+         style="
+         width:100px;
+         height:100px;
+         border:3px solid #dc3545;
+         background:#1f1f1f;
+         ">
 
-                                🥊
+        {% if lutador.foto %}
 
-                            </div>
+            <img src="{{ lutador.foto.url }}"
+                 style="
+                 width:100%;
+                 height:100%;
+                 object-fit:cover;
+                 ">
 
-                        </div>
+        {% else %}
+
+            <div class="d-flex align-items-center justify-content-center h-100"
+                 style="font-size:2.5rem;">
+
+                🥊
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
 
                         <!-- NOME -->
                         <div class="text-center">
