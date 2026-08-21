@@ -1,12 +1,23 @@
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 from django.urls import reverse_lazy
 from .models import Lutador, CategoriaPeso, Evento, Pais
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
+from django.db.models import Prefetch
 
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
+class GroupRequiredMixin(UserPassesTestMixin):
 
+    group_required = None
 
+    def test_func(self):
+
+        if self.request.user.is_superuser:
+            return True
+
+        return self.request.user.groups.filter(
+            name=self.group_required
+        ).exists()
 
 ## CREATES ##
 class LutadorCreate(LoginRequiredMixin, CreateView):
@@ -126,16 +137,31 @@ class PaisUpdate(LoginRequiredMixin, UpdateView):
     }
 
 ## DELETES ##
-class LutadorDelete(LoginRequiredMixin, DeleteView):
+class LutadorDelete(
+    LoginRequiredMixin,
+    GroupRequiredMixin,
+    DeleteView
+):
+
     model = Lutador
 
+    group_required = "Administradores"
+
     def get_queryset(self):
+
         if self.request.user.is_superuser:
+            return Lutador.objects.all()
+
+        if self.request.user.groups.filter(
+            name="Administradores"
+        ).exists():
+
             return Lutador.objects.all()
 
         return Lutador.objects.filter(
             cadastrado_por=self.request.user
         )
+
     template_name = 'ufc/form.html'
     success_url = reverse_lazy('lutador-list')
 
@@ -143,7 +169,6 @@ class LutadorDelete(LoginRequiredMixin, DeleteView):
         'titulo': 'Excluir Lutador',
         'botao': 'Confirmar Exclusão'
     }
-
 class CategoriaPesoDelete(LoginRequiredMixin, DeleteView):
     model = CategoriaPeso
     template_name = 'ufc/form.html'
@@ -187,19 +212,29 @@ class PaisDelete(LoginRequiredMixin, DeleteView):
 class LutadorList(ListView):
     model = Lutador
     template_name = 'ufc/list/lutador_list.html'
-    context_object_name = 'lutadores'   
+    context_object_name = 'lutadores'
     paginate_by = 10
+
+    def get_queryset(self):
+        return Lutador.objects.select_related(
+            'pais',
+            'categoria'
+        ).all()
 
 
 class CategoriaPesoList(ListView):
     model = CategoriaPeso
     template_name = 'ufc/list/categoria_list.html'
 
-    
 class EventoList(ListView):
     model = Evento
     template_name = 'ufc/list/evento_list.html'
 
+    def get_queryset(self):
+        return Evento.objects.select_related(
+            'pais',
+            'usuario'
+        )
 
 class PaisList(ListView):
     model = Pais
@@ -235,20 +270,29 @@ class RankingView(TemplateView):
 
         context = super().get_context_data(**kwargs)
 
-        categorias = CategoriaPeso.objects.all()
+        lutadores = Lutador.objects.select_related(
+            'pais',
+            'categoria'
+        ).order_by(
+            '-vitorias',
+            'derrotas'
+        )
+
+        categorias = CategoriaPeso.objects.prefetch_related(
+            Prefetch(
+                'lutador_set',
+                queryset=lutadores,
+                to_attr='lutadores_ranking'
+            )
+        )
 
         ranking = []
 
         for categoria in categorias:
 
-            lutadores = categoria.lutador_set.all().order_by(
-                '-vitorias',
-                'derrotas'
-            )
-
             ranking.append({
                 'categoria': categoria,
-                'lutadores': lutadores
+                'lutadores': categoria.lutadores_ranking
             })
 
         context['ranking'] = ranking
