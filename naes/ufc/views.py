@@ -188,6 +188,7 @@ class LutadorList(ListView):
     model = Lutador
     template_name = 'ufc/list/lutador_list.html'
     context_object_name = 'lutadores'   
+    paginate_by = 10
 
 
 class CategoriaPesoList(ListView):
@@ -203,6 +204,7 @@ class EventoList(ListView):
 class PaisList(ListView):
     model = Pais
     template_name = 'ufc/list/pais_list.html'
+    paginate_by = 10
 
 
 ## DETAIL ##
