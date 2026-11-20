@@ -50,7 +50,7 @@
                     <div class="chat-messages" id="chatMessages">
 
                         {% if not historico %}
-                            <div class="welcome-message text-center">
+                            <div class="welcome-message text-center" id="welcomeMessage">
                                 <div class="welcome-icon">
                                     <i class="bi bi-chat-square-text"></i>
                                 </div>
@@ -99,6 +99,7 @@
                                             {{ item.mensagem|linebreaksbr }}
                                         </div>
                                     </div>
+
                                     <div class="message-avatar user-avatar">
                                         <i class="bi bi-person-fill"></i>
                                     </div>
@@ -109,10 +110,13 @@
                                     <div class="message-avatar assistant-avatar">
                                         <i class="bi bi-robot"></i>
                                     </div>
+
                                     <div class="message-content">
                                         <div class="message-label">Assistente NAES</div>
-                                        <div class="message-bubble assistant-bubble">
-                                            {{ item.mensagem|linebreaksbr }}
+
+                                        <div class="message-bubble assistant-bubble markdown-content"
+                                             data-markdown>
+                                            {{ item.mensagem }}
                                         </div>
                                     </div>
                                 </div>
@@ -123,15 +127,15 @@
                     </div>
 
                     <!-- ERROS E AVISOS -->
-                    {% if messages %}
-                        <div class="px-4">
+                    <div class="px-4" id="chatFeedback">
+                        {% if messages %}
                             {% for message in messages %}
                                 <div class="alert alert-warning py-2">
                                     {{ message }}
                                 </div>
                             {% endfor %}
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
 
                     <!-- FORMULÁRIO -->
                     <div class="chat-input-area">
@@ -293,6 +297,7 @@
 
     .message-content {
         max-width: 82%;
+        min-width: 0;
     }
 
     .message-label {
@@ -322,7 +327,93 @@
     .user-bubble {
         background: #8f202b;
         border-top-right-radius: 4px;
+        white-space: pre-wrap;
     }
+
+    /* FORMATAÇÃO MARKDOWN */
+
+    .assistant-bubble p {
+        margin-bottom: 12px;
+    }
+
+    .assistant-bubble p:last-child {
+        margin-bottom: 0;
+    }
+
+    .assistant-bubble h1,
+    .assistant-bubble h2,
+    .assistant-bubble h3,
+    .assistant-bubble h4 {
+        color: white;
+        font-weight: bold;
+        margin: 18px 0 10px;
+    }
+
+    .assistant-bubble ul,
+    .assistant-bubble ol {
+        padding-left: 24px;
+        margin-bottom: 14px;
+    }
+
+    .assistant-bubble li {
+        margin-bottom: 5px;
+    }
+
+    .assistant-bubble strong {
+        color: white;
+    }
+
+    .assistant-bubble a {
+        color: #ff7b89;
+        text-decoration: underline;
+    }
+
+    .assistant-bubble code {
+        background: #111;
+        color: #ff9aa5;
+        padding: 3px 6px;
+        border-radius: 5px;
+    }
+
+    .assistant-bubble pre {
+        background: #111;
+        border: 1px solid #383838;
+        padding: 14px;
+        border-radius: 10px;
+        overflow-x: auto;
+        margin: 12px 0;
+    }
+
+    .assistant-bubble pre code {
+        background: transparent;
+        color: #eee;
+        padding: 0;
+    }
+
+    .assistant-bubble table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0;
+    }
+
+    .assistant-bubble th,
+    .assistant-bubble td {
+        border: 1px solid #444;
+        padding: 8px;
+    }
+
+    .assistant-bubble th {
+        background: #303030;
+    }
+
+    .assistant-bubble blockquote {
+        border-left: 3px solid #dc3545;
+        padding-left: 12px;
+        color: #bbb;
+        margin: 12px 0;
+    }
+
+    /* CAMPO DE ENVIO */
 
     .chat-input-area {
         padding: 20px 24px;
@@ -389,39 +480,249 @@
     }
 </style>
 
+<!-- BIBLIOTECAS MARKDOWN E SANITIZAÇÃO -->
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const textarea = document.getElementById('pergunta');
-        const form = document.getElementById('chatForm');
-        const button = document.getElementById('sendButton');
-        const chat = document.getElementById('chatMessages');
+document.addEventListener('DOMContentLoaded', function () {
 
-        chat.scrollTop = chat.scrollHeight;
+    const textarea = document.getElementById('pergunta');
+    const form = document.getElementById('chatForm');
+    const button = document.getElementById('sendButton');
+    const chat = document.getElementById('chatMessages');
+    const feedback = document.getElementById('chatFeedback');
 
-        document.querySelectorAll('.suggestion').forEach(function (item) {
-            item.addEventListener('click', function () {
-                textarea.value = this.dataset.question;
-                textarea.focus();
-            });
-        });
+    // Configuração do Markdown
+    marked.setOptions({
+        breaks: true,
+        gfm: true
+    });
 
-        textarea.addEventListener('input', function () {
-            this.style.height = 'auto';
-            this.style.height = this.scrollHeight + 'px';
-        });
+    // Renderiza as mensagens anteriores da IA
+    document.querySelectorAll('[data-markdown]').forEach(function (element) {
+        const markdown = element.textContent;
 
-        textarea.addEventListener('keydown', function (event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                form.requestSubmit();
-            }
-        });
+        element.innerHTML = DOMPurify.sanitize(
+            marked.parse(markdown)
+        );
+    });
 
-        form.addEventListener('submit', function () {
-            button.disabled = true;
-            button.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+    // Rola o chat para a última mensagem
+    chat.scrollTop = chat.scrollHeight;
+
+    // Sugestões de perguntas
+    document.querySelectorAll('.suggestion').forEach(function (item) {
+        item.addEventListener('click', function () {
+            textarea.value = this.dataset.question;
+            textarea.focus();
         });
     });
+
+    // Ajusta a altura do campo de texto
+    textarea.addEventListener('input', function () {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    });
+
+    // Enter envia; Shift + Enter quebra linha
+    textarea.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            form.requestSubmit();
+        }
+    });
+
+    // Exibe mensagens de erro
+    function mostrarErro(mensagem) {
+        feedback.innerHTML = '';
+
+        const alerta = document.createElement('div');
+        alerta.className = 'alert alert-warning py-2 mb-3';
+        alerta.textContent = mensagem;
+
+        feedback.appendChild(alerta);
+    }
+
+    // Cria uma mensagem no chat
+    function criarMensagem(tipo, conteudo) {
+
+        const linha = document.createElement('div');
+
+        linha.className = tipo === 'usuario'
+            ? 'message-row user-row'
+            : 'message-row assistant-row';
+
+        const avatar = document.createElement('div');
+
+        avatar.className = tipo === 'usuario'
+            ? 'message-avatar user-avatar'
+            : 'message-avatar assistant-avatar';
+
+        const icone = document.createElement('i');
+
+        icone.className = tipo === 'usuario'
+            ? 'bi bi-person-fill'
+            : 'bi bi-robot';
+
+        avatar.appendChild(icone);
+
+        const conteudoDiv = document.createElement('div');
+        conteudoDiv.className = 'message-content';
+
+        const rotulo = document.createElement('div');
+        rotulo.className = 'message-label';
+
+        rotulo.textContent = tipo === 'usuario'
+            ? 'Você'
+            : 'Assistente NAES';
+
+        const balao = document.createElement('div');
+
+        balao.className = tipo === 'usuario'
+            ? 'message-bubble user-bubble'
+            : 'message-bubble assistant-bubble';
+
+        if (tipo === 'usuario') {
+
+            // Mensagem do usuário: nunca interpretar HTML
+            balao.textContent = conteudo;
+
+        } else {
+
+            // Markdown convertido e sanitizado
+            const html = marked.parse(conteudo);
+
+            balao.innerHTML = DOMPurify.sanitize(html);
+        }
+
+        conteudoDiv.appendChild(rotulo);
+        conteudoDiv.appendChild(balao);
+
+        if (tipo === 'usuario') {
+            linha.appendChild(conteudoDiv);
+            linha.appendChild(avatar);
+        } else {
+            linha.appendChild(avatar);
+            linha.appendChild(conteudoDiv);
+        }
+
+        chat.appendChild(linha);
+        chat.scrollTop = chat.scrollHeight;
+
+        return linha;
+    }
+
+    // Indicador de carregamento
+    function mostrarCarregamento() {
+
+        const linha = document.createElement('div');
+
+        linha.className = 'message-row assistant-row';
+        linha.id = 'loadingMessage';
+
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar assistant-avatar';
+
+        const icone = document.createElement('i');
+        icone.className = 'bi bi-robot';
+
+        avatar.appendChild(icone);
+
+        const conteudo = document.createElement('div');
+        conteudo.className = 'message-content';
+
+        const rotulo = document.createElement('div');
+        rotulo.className = 'message-label';
+        rotulo.textContent = 'Assistente NAES';
+
+        const balao = document.createElement('div');
+        balao.className = 'message-bubble assistant-bubble';
+        balao.textContent = 'Pensando...';
+
+        conteudo.appendChild(rotulo);
+        conteudo.appendChild(balao);
+
+        linha.appendChild(avatar);
+        linha.appendChild(conteudo);
+
+        chat.appendChild(linha);
+        chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Envio AJAX
+    form.addEventListener('submit', async function (event) {
+
+        event.preventDefault();
+
+        const pergunta = textarea.value.trim();
+
+        if (!pergunta || button.disabled) {
+            return;
+        }
+
+        feedback.innerHTML = '';
+
+        button.disabled = true;
+        textarea.disabled = true;
+
+        button.innerHTML =
+            '<span class="spinner-border spinner-border-sm"></span>';
+
+        mostrarCarregamento();
+
+        try {
+
+            const respostaHttp = await fetch(window.location.href, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            });
+
+            const dados = await respostaHttp.json();
+
+            document.getElementById('loadingMessage')?.remove();
+
+            if (!respostaHttp.ok || !dados.sucesso) {
+                throw new Error(
+                    dados.erro || 'Não foi possível processar sua pergunta.'
+                );
+            }
+
+            // Remove a mensagem inicial na primeira interação
+            document.getElementById('welcomeMessage')?.remove();
+
+            // Adiciona as mensagens sem recarregar a página
+            criarMensagem('usuario', pergunta);
+            criarMensagem('ia', dados.resposta);
+
+            // Limpa o campo
+            textarea.value = '';
+            textarea.style.height = 'auto';
+
+        } catch (erro) {
+
+            document.getElementById('loadingMessage')?.remove();
+
+            mostrarErro(
+                erro.message || 'Erro ao enviar a pergunta.'
+            );
+
+        } finally {
+
+            button.disabled = false;
+            textarea.disabled = false;
+
+            button.innerHTML = '<i class="bi bi-send-fill"></i>';
+
+            textarea.focus();
+        }
+    });
+
+});
 </script>
 
 {% endblock conteudo %}
