@@ -1,444 +1,460 @@
-{% load static %}
-
-<!DOCTYPE html>
-<html lang="pt-BR" data-bs-theme="light">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% load static %}
+
+  <!DOCTYPE html>
+  <html lang="pt-BR" data-bs-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>UFC Manager</title>
+    <title>UFC Manager</title>
 
-  <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Syne:wght@600;700;800&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Syne:wght@600;700;800&display=swap"
+          rel="stylesheet" />
 
-  <!-- Bootstrap -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
 
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
 
-</head>
+  </head>
 
-<body>
+  <body>
 
-<!-- ═══════════════════════════════════
-     NAVBAR
-════════════════════════════════════ -->
-<nav class="navbar navbar-expand-lg navbar-petrol fixed-top">
+  <!-- ═══════════════════════════════════
+      NAVBAR
+  ════════════════════════════════════ -->
+  <nav class="navbar navbar-expand-lg navbar-petrol fixed-top">
 
-  <div class="container">
+    <div class="container">
 
-    <!-- LOGO -->
-    <a class="navbar-brand" href="{% url 'index' %}">
-      <span class="brand-dot"></span>
-      UFC Manager
-    </a>
+      <!-- LOGO -->
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <span class="brand-dot"></span>
+        UFC Manager
+      </a>
 
-    <!-- MENU MOBILE -->
-    <button class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navMain"
-            aria-controls="navMain"
-            aria-expanded="false"
-            aria-label="Menu">
+      <!-- MENU MOBILE -->
+      <button class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navMain"
+              aria-controls="navMain"
+              aria-expanded="false"
+              aria-label="Menu">
 
-      <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
 
-    </button>
+      </button>
 
-    <!-- NAV -->
-    <div class="collapse navbar-collapse" id="navMain">
+      <!-- NAV -->
+      <div class="collapse navbar-collapse" id="navMain">
 
-      <ul class="navbar-nav mx-auto gap-1">
+        <ul class="navbar-nav mx-auto gap-1">
 
-        <!-- HOME -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'index' %}">
-            <i class="bi bi-house me-1"></i>
-            Início
-          </a>
-        </li>
+          <!-- HOME -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">
+              <i class="bi bi-house me-1"></i>
+              Início
+            </a>
+          </li>
 
-        <!-- SOBRE -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'sobre' %}">
-            <i class="bi bi-info-circle me-1"></i>
-            Sobre
-          </a>
-        </li>
+          <!-- SOBRE -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'sobre' %}">
+              <i class="bi bi-info-circle me-1"></i>
+              Sobre
+            </a>
+          </li>
 
-        <!-- CONTATO -->
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'contato' %}">
-            <i class="bi bi-envelope me-1"></i>
-            Contato
-          </a>
-        </li>
+          <!-- CONTATO -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contato' %}">
+              <i class="bi bi-envelope me-1"></i>
+              Contato
+            </a>
+          </li>
 
-        <!-- GERENCIAR -->
-        {% if request.user.is_authenticated %}
+          <!-- GERENCIAR -->
+          {% if request.user.is_authenticated %}
 
-        <li class="nav-item dropdown">
+          <li class="nav-item dropdown">
 
-          <a class="nav-link dropdown-toggle"
-             href="#"
-             role="button"
-             data-bs-toggle="dropdown"
-             aria-expanded="false">
+            <a class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false">
 
-            <i class="bi bi-grid me-1"></i>
-            Gerenciar
+              <i class="bi bi-grid me-1"></i>
+              Gerenciar
 
-          </a>
+            </a>
 
-          <ul class="dropdown-menu shadow">
+            <ul class="dropdown-menu shadow">
 
-            <!-- LUTADORES -->
-            <li>
-              <span class="dropdown-header">
-                Atletas
-              </span>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'lutador-create' %}">
-
-                <i class="bi bi-person-plus me-2"></i>
-                Cadastrar Lutador
-
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'lutador-list' %}">
-
-                <i class="bi bi-people me-2"></i>
-                Ver Lutadores
-
-              </a>
-            </li>
-
-            <li><hr class="dropdown-divider"></li>
-
-             <!-- PAISES -->
-             <li>
-              <span class="dropdown-header">
-                Países
-              </span>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'pais-create' %}">
-
-                <i class="bi bi-flag"></i>
-                Cadastrar País
-
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'pais-list' %}">
-
-                <i class="bi bi-flag-fill"></i>
-                Ver Países
-
-              </a>
-            </li>
-
-            <li><hr class="dropdown-divider"></li>
-
-            <!-- CATEGORIAS -->
-            <li>
-              <span class="dropdown-header">
-                Categorias
-              </span>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'categoria-create' %}">
-
-                 <i class="bi bi-grid"></i>
-                Cadastrar Categoria
-
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'categoria-list' %}">
-
-                 <i class="bi bi-grid-1x2-fill"></i>
-                Ver Categorias
-
-              </a>
-            </li>
-
-            <li><hr class="dropdown-divider"></li>
-
-            <!-- EVENTOS -->
-            <li>
-              <span class="dropdown-header">
-                Competições
-              </span>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'evento-create' %}">
-
-                <i class="bi bi-calendar-plus me-2"></i>
-                Novo Evento
-
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item"
-                 href="{% url 'evento-list' %}">
-
-                <i class="bi bi-trophy me-2"></i>
-                Ver Eventos
-
-              </a>
-            </li>
-
-            <li>
-              <a class="dropdown-item" href="#">
-                <i class="bi bi-box-arrow-in-right me-2"></i>
-                Gerenciar Lutas
-              </a>
-            </li>
-
-            <li><hr class="dropdown-divider"></li>
-
-            <!-- RANKINGS -->
-            <li>
-              <span class="dropdown-header">
-                Rankings
-              </span>
-            </li>
-
-            <li>
-              <a class="dropdown-item"  href="{% url 'ranking' %}">
-                <i class="bi bi-bar-chart-line me-2"></i>
-                Ver Ranking
-              </a>
-            </li>
-
-          </ul>
-
-        </li>
-
-        {% endif %}
-
-      </ul>
-
-      <!-- ═════════════════════════════
-           AUTH DJANGO
-      ═════════════════════════════ -->
-
-      <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-
-        {% if request.user.is_authenticated %}
-
-          <!-- USUÁRIO LOGADO -->
-          <div class="dropdown">
-
-            <div class="user-chip"
-                 data-bs-toggle="dropdown"
-                 aria-expanded="false">
-
-              <div class="user-avatar">🥊</div>
-
-              <span class="user-chip-name d-none d-md-inline">
-                {{ request.user.username }}
-              </span>
-
-              <i class="bi bi-chevron-down text-white-50"
-                 style="font-size:.65rem"></i>
-
-            </div>
-
-            <ul class="dropdown-menu dropdown-menu-end shadow mt-2">
-
+              <!-- LUTADORES -->
               <li>
                 <span class="dropdown-header">
-                  Conta
+                  Atletas
                 </span>
               </li>
 
               <li>
                 <a class="dropdown-item"
-                   href="/admin/">
+                  href="{% url 'lutador-create' %}">
 
-                  <i class="bi bi-person me-2"></i>
-                  Meu Perfil
+                  <i class="bi bi-person-plus me-2"></i>
+                  Cadastrar Lutador
+
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'lutador-list' %}">
+
+                  <i class="bi bi-people me-2"></i>
+                  Ver Lutadores
 
                 </a>
               </li>
 
               <li><hr class="dropdown-divider"></li>
 
+              <!-- PAISES -->
               <li>
+                <span class="dropdown-header">
+                  Países
+                </span>
+              </li>
 
-                <form action="{% url 'logout' %}" method="POST">
-            
-                    {% csrf_token %}
-            
-                    <button type="submit"
-                            class="dropdown-item text-danger">
-            
-                        <i class="bi bi-box-arrow-left me-2"></i>
-                        Sair
-            
-                    </button>
-            
-                </form>
-            
-            </li>
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'pais-create' %}">
+
+                  <i class="bi bi-flag"></i>
+                  Cadastrar País
+
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'pais-list' %}">
+
+                  <i class="bi bi-flag-fill"></i>
+                  Ver Países
+
+                </a>
+              </li>
+
+              <li><hr class="dropdown-divider"></li>
+
+              <!-- CATEGORIAS -->
+              <li>
+                <span class="dropdown-header">
+                  Categorias
+                </span>
+              </li>
+
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'categoria-create' %}">
+
+                  <i class="bi bi-grid"></i>
+                  Cadastrar Categoria
+
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'categoria-list' %}">
+
+                  <i class="bi bi-grid-1x2-fill"></i>
+                  Ver Categorias
+
+                </a>
+              </li>
+
+              <li><hr class="dropdown-divider"></li>
+
+              <!-- EVENTOS -->
+              <li>
+                <span class="dropdown-header">
+                  Competições
+                </span>
+              </li>
+
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'evento-create' %}">
+
+                  <i class="bi bi-calendar-plus me-2"></i>
+                  Novo Evento
+
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item"
+                  href="{% url 'evento-list' %}">
+
+                  <i class="bi bi-trophy me-2"></i>
+                  Ver Eventos
+
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="bi bi-box-arrow-in-right me-2"></i>
+                  Gerenciar Lutas
+                </a>
+              </li>
+
+              <li><hr class="dropdown-divider"></li>
+              
+              <!-- INTELIGÊNCIA ARTIFICIAL -->
+              <li>
+                <span class="dropdown-header">
+                    Inteligência Artificial
+                </span>
+              </li>
+
+              <li>
+                <a class="dropdown-item" href="{% url 'ia:assistente' %}">
+                    <i class="bi bi-robot me-2 text-danger"></i>
+                    Assistente Virtual
+                </a>
+              </li>
+
+              <li><hr class="dropdown-divider"></li>
+
+              <!-- RANKINGS -->
+              <li>
+                <span class="dropdown-header">
+                  Rankings
+                </span>
+              </li>
+
+              <li>
+                <a class="dropdown-item"  href="{% url 'ranking' %}">
+                  <i class="bi bi-bar-chart-line me-2"></i>
+                  Ver Ranking
+                </a>
+              </li>
 
             </ul>
 
-          </div>
-
-        {% else %}
-
-          <!-- NÃO LOGADO -->
-          <a href="{% url 'login' %}"
-             class="btn-auth btn">
-
-            <i class="bi bi-box-arrow-in-right me-1"></i>
-            Entrar
-
-          </a>
-
-        {% endif %}
-
-      </div>
-
-    </div>
-  </div>
-</nav>
-
-<!-- ═══════════════════════════════════
-     MAIN
-════════════════════════════════════ -->
-<main style="padding-top: 56px;">
-
-  {% block hero %}
-  {% endblock hero %}
-
-  {% block conteudo %}
-  {% endblock conteudo %}
-
-</main>
-
-<!-- ═══════════════════════════════════
-     FOOTER
-════════════════════════════════════ -->
-<footer class="py-5">
-
-  <div class="container">
-
-    <div class="row g-4 pb-4">
-
-      <div class="col-lg-4">
-
-        <div class="footer-brand mb-2">
-          <span style="color:var(--petrol-lighter)">🥊</span>
-          UFC Manager
-        </div>
-
-        <p style="max-width:280px; line-height:1.7">
-          Plataforma completa para gerenciar eventos de luta,
-          cadastrar lutadores e acompanhar rankings em tempo real.
-        </p>
-
-      </div>
-
-      <div class="col-6 col-lg-2">
-
-        <div class="footer-heading">
-          Sistema
-        </div>
-
-        <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
-
-          <li>
-            <a href="{% url 'sobre' %}">
-              Sobre
-            </a>
           </li>
 
-          <li>
-            <a href="{% url 'contato' %}">
-              Contato
-            </a>
-          </li>
+          {% endif %}
 
         </ul>
 
+        <!-- ═════════════════════════════
+            AUTH DJANGO
+        ═════════════════════════════ -->
+
+        <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+
+          {% if request.user.is_authenticated %}
+
+            <!-- USUÁRIO LOGADO -->
+            <div class="dropdown">
+
+              <div class="user-chip"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+
+                <div class="user-avatar">🥊</div>
+
+                <span class="user-chip-name d-none d-md-inline">
+                  {{ request.user.username }}
+                </span>
+
+                <i class="bi bi-chevron-down text-white-50"
+                  style="font-size:.65rem"></i>
+
+              </div>
+
+              <ul class="dropdown-menu dropdown-menu-end shadow mt-2">
+
+                <li>
+                  <span class="dropdown-header">
+                    Conta
+                  </span>
+                </li>
+
+                <li>
+                  <a class="dropdown-item"
+                    href="/admin/">
+
+                    <i class="bi bi-person me-2"></i>
+                    Meu Perfil
+
+                  </a>
+                </li>
+
+                <li><hr class="dropdown-divider"></li>
+
+                <li>
+
+                  <form action="{% url 'logout' %}" method="POST">
+              
+                      {% csrf_token %}
+              
+                      <button type="submit"
+                              class="dropdown-item text-danger">
+              
+                          <i class="bi bi-box-arrow-left me-2"></i>
+                          Sair
+              
+                      </button>
+              
+                  </form>
+              
+              </li>
+
+              </ul>
+
+            </div>
+
+          {% else %}
+
+            <!-- NÃO LOGADO -->
+            <a href="{% url 'login' %}"
+              class="btn-auth btn">
+
+              <i class="bi bi-box-arrow-in-right me-1"></i>
+              Entrar
+
+            </a>
+
+          {% endif %}
+
+        </div>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════
+      MAIN
+  ════════════════════════════════════ -->
+  <main style="padding-top: 56px;">
+
+    {% block hero %}
+    {% endblock hero %}
+
+    {% block conteudo %}
+    {% endblock conteudo %}
+
+  </main>
+
+  <!-- ═══════════════════════════════════
+      FOOTER
+  ════════════════════════════════════ -->
+  <footer class="py-5">
+
+    <div class="container">
+
+      <div class="row g-4 pb-4">
+
+        <div class="col-lg-4">
+
+          <div class="footer-brand mb-2">
+            <span style="color:var(--petrol-lighter)">🥊</span>
+            UFC Manager
+          </div>
+
+          <p style="max-width:280px; line-height:1.7">
+            Plataforma completa para gerenciar eventos de luta,
+            cadastrar lutadores e acompanhar rankings em tempo real.
+          </p>
+
+        </div>
+
+        <div class="col-6 col-lg-2">
+
+          <div class="footer-heading">
+            Sistema
+          </div>
+
+          <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+
+            <li>
+              <a href="{% url 'sobre' %}">
+                Sobre
+              </a>
+            </li>
+
+            <li>
+              <a href="{% url 'contato' %}">
+                Contato
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+
+      <hr />
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 pt-2">
+
+        <span style="font-size:.8rem">
+          © 2026 UFC Manager — IFPR.
+        </span>
+
       </div>
 
     </div>
 
-    <hr />
+  </footer>
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 pt-2">
+  <!-- jQuery -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-      <span style="font-size:.8rem">
-        © 2026 UFC Manager — IFPR.
-      </span>
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 
-    </div>
+  <!-- NAVBAR ACTIVE -->
+  <script>
 
-  </div>
+  $(document).ready(function () {
 
-</footer>
+    const currentPath = window.location.pathname;
 
-<!-- jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    $('.navbar-petrol .nav-link').each(function () {
 
-<!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+      if ($(this).attr('href') === currentPath) {
 
-<!-- NAVBAR ACTIVE -->
-<script>
+        $(this).addClass('active');
 
-$(document).ready(function () {
+      }
 
-  const currentPath = window.location.pathname;
-
-  $('.navbar-petrol .nav-link').each(function () {
-
-    if ($(this).attr('href') === currentPath) {
-
-      $(this).addClass('active');
-
-    }
+    });
 
   });
 
-});
+  </script>
 
-</script>
-
-</body>
-</html>
+  </body>
+  </html>

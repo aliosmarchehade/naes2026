@@ -16,7 +16,12 @@ from urllib.parse import urlparse, parse_qsl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from dotenv import load_dotenv
 
+load_dotenv(BASE_DIR / '.env')
+
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+OPENAI_MODEL = os.getenv('OPENAI_MODEL', 'gpt-5.5')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -41,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     "debug_toolbar",
     'django.contrib.staticfiles',
+    'ia.apps.IaConfig',
 
     #Ativar meus apps
     'website.apps.WebsiteConfig',
