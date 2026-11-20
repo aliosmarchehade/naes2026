@@ -1,3 +1,4 @@
+
 {% extends "website/modelo.html" %}
 {% load static %}
 
@@ -15,7 +16,59 @@
     </a>
   </div>
 
-  <!-- CARD -->
+  <!-- FILTROS -->
+  <div class="card p-3 mb-4"
+       style="background:#111; border:1px solid #222; color:#fff;">
+
+    <h5 class="mb-3">Filtrar lutadores</h5>
+
+    <form method="get">
+
+      <div class="row g-3">
+
+        <div class="col-md-4">
+          <label class="form-label">Nome</label>
+          {{ filter.form.nome }}
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Apelido</label>
+          {{ filter.form.apelido }}
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Categoria</label>
+          {{ filter.form.categoria }}
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Idade mínima</label>
+          {{ filter.form.idade_min }}
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Idade máxima</label>
+          {{ filter.form.idade_max }}
+        </div>
+
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button type="submit" class="btn"
+                style="background:#c1121f; color:#fff;">
+          Filtrar
+        </button>
+
+        <a href="{% url 'lutador-list' %}"
+           class="btn btn-outline-light">
+          Limpar filtros
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- TABELA -->
   <div class="card-petrol p-3 rounded-2xl"
        style="background:#111; border:1px solid #222;">
 
@@ -37,19 +90,25 @@
 
         <tbody>
 
-          {% for lutador in object_list %}
+          {% for lutador in lutadores %}
           <tr>
             <td>{{ lutador.nome }}</td>
             <td>{{ lutador.apelido|default:"-" }}</td>
+
             <td>
-              <img src="https://flagcdn.com/24x18/{{ lutador.pais.sigla|lower }}.png"
-                   width="24"
-                   class="me-2">
+              {% if lutador.pais %}
+                <img src="https://flagcdn.com/24x18/{{ lutador.pais.sigla|lower }}.png"
+                     width="24"
+                     class="me-2"
+                     alt="{{ lutador.pais.nome }}">
+              {% else %}
+                -
+              {% endif %}
             </td>
+
             <td>{{ lutador.idade }}</td>
             <td>{{ lutador.peso }} kg</td>
             <td>{{ lutador.categoria }}</td>
-            
 
             <td>
               <span style="color:#4caf50;">{{ lutador.vitorias }}</span> /
@@ -75,10 +134,11 @@
 
             </td>
           </tr>
+
           {% empty %}
           <tr>
-            <td colspan="7" class="text-center text-white-50 py-4">
-              Nenhum lutador cadastrado.
+            <td colspan="8" class="text-center text-white-50 py-4">
+              Nenhum lutador encontrado.
             </td>
           </tr>
           {% endfor %}
@@ -86,22 +146,33 @@
         </tbody>
 
       </table>
-      
-
     </div>
 
   </div>
-  <div class= "text-center">
+
+  <!-- PAGINAÇÃO -->
+  <div class="text-center mt-4">
 
     {% if page_obj.has_previous %}
-    <a href="?page={{page_obj.previous_page_number}}"> Voltar </a>
+      <a class="btn btn-outline-dark"
+         href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">
+        Voltar
+      </a>
     {% endif %}
-    
+
+    <span class="mx-3">
+      Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+    </span>
+
     {% if page_obj.has_next %}
-    <a href="?page={{page_obj.next_page_number}}"> Próxima </a>
+      <a class="btn btn-outline-dark"
+         href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">
+        Próxima
+      </a>
     {% endif %}
-    
-    </div>
+
+  </div>
+
 </div>
 
 {% endblock conteudo %}

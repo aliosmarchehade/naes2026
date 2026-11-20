@@ -4,6 +4,7 @@ from .models import Lutador, CategoriaPeso, Evento, Pais
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView
 from django.db.models import Prefetch
+from .filters import LutadorFilter, EventoFilter
 
 # from django.contrib.auth.mixins import LoginRequiredMixin ##vou usar isso aqui pra qnd tiver opcao de login
 class GroupRequiredMixin(UserPassesTestMixin):
@@ -216,12 +217,28 @@ class LutadorList(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Lutador.objects.select_related(
-            'pais',
-            'categoria'
-        ).all()
+        queryset = Lutador.objects.select_related(
+    'pais',
+    'categoria'
+).order_by('nome')
+        self.filterset = LutadorFilter(
+            self.request.GET,
+            queryset=queryset
+        )
 
+        return self.filterset.qs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.filterset
+
+        parametros = self.request.GET.copy()
+        parametros.pop('page', None)
+
+        context['querystring'] = parametros.urlencode()
+
+        return context
+    
 class CategoriaPesoList(ListView):
     model = CategoriaPeso
     template_name = 'ufc/list/categoria_list.html'
@@ -229,13 +246,32 @@ class CategoriaPesoList(ListView):
 class EventoList(ListView):
     model = Evento
     template_name = 'ufc/list/evento_list.html'
+    context_object_name = 'eventos'
+    paginate_by = 10
 
     def get_queryset(self):
-        return Evento.objects.select_related(
+        queryset = Evento.objects.select_related(
             'pais',
             'usuario'
+        ).all()
+
+        self.filterset = EventoFilter(
+            self.request.GET,
+            queryset=queryset
         )
 
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.filterset
+
+        parametros = self.request.GET.copy()
+        parametros.pop('page', None)
+
+        context['querystring'] = parametros.urlencode()
+
+        return context
 class PaisList(ListView):
     model = Pais
     template_name = 'ufc/list/pais_list.html'
