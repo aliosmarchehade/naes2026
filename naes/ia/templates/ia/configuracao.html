@@ -1,0 +1,215 @@
+
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+
+<section class="py-5" style="background:#080808; min-height:85vh;">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="mb-4">
+                    <a href="{% url 'ia:assistente' %}"
+                       class="text-secondary text-decoration-none">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Voltar ao assistente
+                    </a>
+
+                    <h2 class="text-white fw-bold mt-3">
+                        <i class="bi bi-gear-fill text-danger me-2"></i>
+                        Configuração da IA
+                    </h2>
+
+                    <p class="text-secondary">
+                        Gerencie os parâmetros de integração do NAES com a OpenAI.
+                    </p>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="config-card">
+
+                    <div class="config-header">
+                        <h5 class="text-white mb-1">
+                            Parâmetros da integração
+                        </h5>
+
+                        <small class="text-secondary">
+                            Defina como o assistente deverá funcionar.
+                        </small>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="config-body">
+
+                            {% for field in form %}
+                                <div class="mb-4">
+
+                                    {% if field.name == "ativa" %}
+                                        <div class="form-check">
+                                            {{ field }}
+                                            <label class="form-check-label text-white"
+                                                   for="{{ field.id_for_label }}">
+                                                {{ field.label }}
+                                            </label>
+                                        </div>
+                                    {% else %}
+                                        <label class="form-label text-white"
+                                               for="{{ field.id_for_label }}">
+                                            {{ field.label }}
+                                        </label>
+
+                                        {{ field }}
+                                    {% endif %}
+
+                                    {% if field.help_text %}
+                                        <small class="text-secondary">
+                                            {{ field.help_text }}
+                                        </small>
+                                    {% endif %}
+
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small mt-1">
+                                            {{ error }}
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            {% endfor %}
+
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <div class="info-box">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                A chave da API é obtida através das variáveis
+                                de ambiente e não é armazenada nesta tela.
+                            </div>
+
+                        </div>
+
+                        <div class="config-footer">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Salvar configurações
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="config-card mt-4">
+                    <div class="config-body">
+
+                        <h5 class="text-white">
+                            <i class="bi bi-plug-fill text-danger me-2"></i>
+                            Teste de conexão
+                        </h5>
+
+                        <p class="text-secondary">
+                            Verifique se a chave da API está válida e se
+                            o modelo selecionado está acessível.
+                        </p>
+
+                        <form method="POST"
+                              action="{% url 'ia:testar_conexao' %}">
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn btn-outline-danger">
+                                <i class="bi bi-wifi me-2"></i>
+                                Testar conexão com OpenAI
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="text-secondary small mt-4">
+                    {% if configuracao.atualizado_por %}
+                        Última alteração realizada por:
+                        {{ configuracao.atualizado_por.username }}
+                    {% endif %}
+
+                    {% if configuracao.atualizado_em %}
+                        <br>
+                        Atualizado em:
+                        {{ configuracao.atualizado_em|date:"d/m/Y H:i" }}
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<style>
+    .config-card {
+        background: #111;
+        border: 1px solid #292929;
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    .config-header {
+        padding: 22px;
+        border-bottom: 1px solid #292929;
+        background: #171717;
+    }
+
+    .config-body {
+        padding: 25px;
+    }
+
+    .config-footer {
+        padding: 18px 25px;
+        background: #171717;
+        border-top: 1px solid #292929;
+    }
+
+    .config-body .form-control,
+    .config-body .form-select {
+        background-color: #222;
+        border: 1px solid #383838;
+        color: white;
+    }
+
+    .config-body .form-control:focus,
+    .config-body .form-select:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 .2rem rgba(220, 53, 69, .15);
+    }
+
+    .config-body .form-check-input {
+        background-color: #222;
+        border-color: #555;
+    }
+
+    .config-body .form-check-input:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .info-box {
+        background: #1b1b1b;
+        color: #aaa;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: .9rem;
+    }
+</style>
+
+{% endblock conteudo %}

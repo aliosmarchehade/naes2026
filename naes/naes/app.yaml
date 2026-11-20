@@ -1,0 +1,8 @@
+
+runtime: python312
+
+entrypoint: gunicorn -b :$PORT naes.wsgi:application
+
+automatic_scaling:
+  min_instances: 0
+  max_instances: 2

@@ -28,6 +28,10 @@
     <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
 
+    <!-- DataTables CSS -->
+<link rel="stylesheet"
+href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css">
+
   </head>
 
   <body>
@@ -358,6 +362,37 @@
   ════════════════════════════════════ -->
   <main style="padding-top: 56px;">
 
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm"
+             role="alert">
+
+            {% if message.tags == 'success' %}
+                <i class="bi bi-check-circle-fill me-2"></i>
+            {% elif message.tags == 'error' %}
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
+            {% elif message.tags == 'warning' %}
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {% else %}
+                <i class="bi bi-info-circle-fill me-2"></i>
+            {% endif %}
+
+            {{ message }}
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Fechar">
+            </button>
+
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
     {% block hero %}
     {% endblock hero %}
 
@@ -432,6 +467,12 @@
   <!-- jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+  <!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+<!-- Integração DataTables + Bootstrap 5 -->
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
   <!-- Bootstrap JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 
@@ -453,6 +494,48 @@
     });
 
   });
+
+  $(document).ready(function () {
+
+    // Navbar ativa
+    const currentPath = window.location.pathname;
+
+    $('.navbar-petrol .nav-link').each(function () {
+        if ($(this).attr('href') === currentPath) {
+            $(this).addClass('active');
+        }
+    });
+
+    // DataTables - Lutadores e Eventos
+    const configuracaoTabela = {
+        paging: false,
+        info: false,
+        lengthChange: false,
+        searching: true,
+        ordering: true,
+        autoWidth: false,
+        order: [],
+
+        columnDefs: [
+            {
+                targets: -1,
+                orderable: false,
+                searchable: false
+            }
+        ],
+
+        language: {
+            search: "Pesquisar nesta página:",
+            searchPlaceholder: "Digite para pesquisar...",
+            emptyTable: "Nenhum registro encontrado.",
+            zeroRecords: "Nenhum resultado correspondente encontrado."
+        }
+    };
+
+    $('#tabela-lutadores').DataTable(configuracaoTabela);
+    $('#tabela-eventos').DataTable(configuracaoTabela);
+
+});
 
   </script>
 

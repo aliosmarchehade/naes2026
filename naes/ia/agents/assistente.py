@@ -1,5 +1,6 @@
 
 import json
+from pathlib import Path
 
 from django.conf import settings
 from openai import OpenAI
@@ -127,7 +128,7 @@ FERRAMENTAS = [
 ]
 
 
-# Associação entre as ferramentas da IA e as funções Python
+# Associação entre as ferramentas e as funções Python
 FUNCOES = {
     "buscar_lutadores": buscar_lutadores,
     "ranking_lutadores": ranking_lutadores,
@@ -139,37 +140,39 @@ FUNCOES = {
 }
 
 
-def responder(pergunta):
+def carregar_contexto():
+    """Carrega as instruções do assistente a partir do arquivo Markdown."""
+
+    caminho = Path(__file__).with_name("contexto_projeto.md")
+
+    try:
+        return caminho.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"Arquivo de contexto não encontrado: {caminho}"
+        )
+
+
+def responder(pergunta, modelo=None):
     """Processa uma pergunta utilizando os agentes e a OpenAI."""
 
     if not settings.OPENAI_API_KEY:
         raise ValueError("A chave da API da OpenAI não foi configurada.")
 
+    modelo = modelo or settings.OPENAI_MODEL
+
     cliente = OpenAI(api_key=settings.OPENAI_API_KEY)
 
-    instrucoes = """
-    Você é o assistente virtual oficial do NAES,
-    um sistema de gerenciamento de eventos e lutadores de MMA.
+    tokens_entrada = 0
+    tokens_saida = 0
+    identificador = ""
 
-    Você possui ferramentas para consultar os dados cadastrados no sistema.
+    # Carrega as instruções externas do projeto
+    instrucoes = carregar_contexto()
 
-    REGRAS:
-    1. Utilize as ferramentas disponíveis para responder perguntas
-       sobre lutadores, rankings, eventos e lutas.
-    2. Não invente nomes, resultados, estatísticas ou datas.
-    3. Não afirme que uma informação existe sem consultar o banco.
-    4. Se não encontrar registros, informe isso claramente.
-    5. Não invente informações que não estejam disponíveis nas consultas.
-    6. Responda em português brasileiro.
-    7. Organize as respostas de maneira clara e objetiva.
-    8. Você não pode cadastrar, editar ou excluir dados.
-    9. Quando comparar lutadores, utilize somente os dados retornados
-       pelas ferramentas.
-    10. Deixe claro quando uma informação não estiver cadastrada.
-    """
-
+    # Primeira chamada à OpenAI
     resposta = cliente.responses.create(
-        model=settings.OPENAI_MODEL,
+        model=modelo,
         instructions=instrucoes,
         input=pergunta,
         tools=FERRAMENTAS,
@@ -178,13 +181,28 @@ def responder(pergunta):
     # Permite que a IA execute as ferramentas necessárias
     for tentativa in range(5):
 
+        if resposta.usage:
+            tokens_entrada += resposta.usage.input_tokens
+            tokens_saida += resposta.usage.output_tokens
+
+        identificador = resposta.id
+
         chamadas = [
             item for item in resposta.output
             if item.type == "function_call"
         ]
 
+        # Se não houver ferramentas, retorna a resposta final
         if not chamadas:
-            return resposta.output_text
+            return {
+                "resposta": resposta.output_text or (
+                    "Não foi possível gerar uma resposta."
+                ),
+                "tokens_entrada": tokens_entrada,
+                "tokens_saida": tokens_saida,
+                "total_tokens": tokens_entrada + tokens_saida,
+                "identificador": identificador,
+            }
 
         resultados = []
 
@@ -192,7 +210,9 @@ def responder(pergunta):
             funcao = FUNCOES.get(chamada.name)
 
             if not funcao:
-                resultado = {"erro": "Ferramenta não disponível."}
+                resultado = {
+                    "erro": "Ferramenta não disponível."
+                }
             else:
                 try:
                     argumentos = json.loads(chamada.arguments)
@@ -203,22 +223,38 @@ def responder(pergunta):
                         "erro": "Não foi possível processar os argumentos."
                     }
 
+                except Exception:
+                    resultado = {
+                        "erro": "Ocorreu um erro ao consultar os dados."
+                    }
+
             resultados.append({
                 "type": "function_call_output",
                 "call_id": chamada.call_id,
                 "output": json.dumps(
                     resultado,
                     ensure_ascii=False,
-                    default=str
+                    default=str,
                 ),
             })
 
+        # Envia os resultados das ferramentas para a OpenAI
         resposta = cliente.responses.create(
-            model=settings.OPENAI_MODEL,
+            model=modelo,
             instructions=instrucoes,
             previous_response_id=resposta.id,
             input=resultados,
             tools=FERRAMENTAS,
         )
 
-    return "Não consegui concluir a consulta. Tente reformular sua pergunta."
+    # Caso o limite de ciclos seja atingido
+    return {
+        "resposta": (
+            "Não consegui concluir a consulta. "
+            "Tente reformular sua pergunta."
+        ),
+        "tokens_entrada": tokens_entrada,
+        "tokens_saida": tokens_saida,
+        "total_tokens": tokens_entrada + tokens_saida,
+        "identificador": identificador,
+    }

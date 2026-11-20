@@ -1,0 +1,368 @@
+
+{% extends "website/modelo.html" %}
+
+{% block conteudo %}
+
+<style>
+    .ia-page {
+        color: #f1f1f1;
+        padding: 25px 0;
+    }
+
+    .ia-card {
+        background: #151515;
+        border: 1px solid #292929;
+        border-radius: 12px;
+        padding: 22px;
+        height: 100%;
+    }
+
+    .ia-muted {
+        color: #999;
+    }
+
+    .ia-stat {
+        font-size: 27px;
+        font-weight: 700;
+        margin-top: 8px;
+    }
+
+    .ia-table {
+        color: #ddd;
+        vertical-align: middle;
+        margin-bottom: 0;
+    }
+
+    .ia-table thead th {
+        color: #aaa;
+        border-bottom: 1px solid #333;
+        font-size: 12px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .ia-table td {
+        border-color: #292929;
+        font-size: 13px;
+    }
+
+    .ia-table tbody tr:hover {
+        background: #202020;
+    }
+
+    .ia-input {
+        background: #202020 !important;
+        border: 1px solid #383838 !important;
+        color: white !important;
+    }
+
+    .ia-input:focus {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.2rem rgba(220,53,69,.15);
+    }
+
+    .ia-input option {
+        background: #202020;
+    }
+
+    .ia-btn {
+        background: #dc3545;
+        color: white;
+        border: none;
+    }
+
+    .ia-btn:hover {
+        background: #bb2d3b;
+        color: white;
+    }
+
+    .ia-badge-success {
+        background: rgba(25,135,84,.18);
+        color: #45d391;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .ia-badge-error {
+        background: rgba(220,53,69,.18);
+        color: #ff737e;
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    .ia-pagination .page-link {
+        background: #202020;
+        border-color: #383838;
+        color: #ddd;
+    }
+
+    .ia-pagination .active .page-link {
+        background: #dc3545;
+        border-color: #dc3545;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .ia-page {
+            padding: 15px 0;
+        }
+
+        .ia-card {
+            padding: 16px;
+        }
+    }
+</style>
+
+<div class="container-fluid ia-page">
+
+    <!-- CABEÇALHO -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-clipboard-data text-danger me-2"></i>
+                Auditoria da IA
+            </h2>
+            <p class="ia-muted mb-0">
+                Acompanhe o histórico de utilização da inteligência artificial.
+            </p>
+        </div>
+
+        <a href="{% url 'ia:configuracao' %}" class="btn btn-outline-light">
+            <i class="bi bi-gear me-1"></i>
+            Configurações
+        </a>
+    </div>
+
+    <!-- MENSAGENS -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- INDICADORES -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+            <div class="ia-card">
+                <div class="ia-muted">
+                    <i class="bi bi-chat-left-text me-1"></i>
+                    Total de chamadas
+                </div>
+                <div class="ia-stat">{{ total_chamadas }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="ia-card">
+                <div class="ia-muted">
+                    <i class="bi bi-cpu me-1"></i>
+                    Total de tokens utilizados
+                </div>
+                <div class="ia-stat">{{ total_tokens }}</div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="ia-card">
+                <div class="ia-muted">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Chamadas com erro
+                </div>
+                <div class="ia-stat text-danger">{{ chamadas_com_erro }}</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FILTROS -->
+    <div class="ia-card mb-4">
+        <form method="GET" class="row g-3 align-items-end">
+
+            <div class="col-md-5">
+                <label class="form-label ia-muted">Buscar usuário ou modelo</label>
+                <input
+                    type="text"
+                    name="busca"
+                    class="form-control ia-input"
+                    placeholder="Digite um usuário ou modelo..."
+                    value="{{ busca }}"
+                >
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label ia-muted">Status</label>
+                <select name="status" class="form-select ia-input">
+                    <option value="">Todos os status</option>
+                    <option value="sucesso" {% if filtro_status == "sucesso" %}selected{% endif %}>
+                        Sucesso
+                    </option>
+                    <option value="erro" {% if filtro_status == "erro" %}selected{% endif %}>
+                        Erro
+                    </option>
+                </select>
+            </div>
+
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn ia-btn flex-grow-1">
+                    <i class="bi bi-search me-1"></i>
+                    Filtrar
+                </button>
+
+                <a href="{% url 'ia:auditoria' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- TABELA -->
+    <div class="ia-card">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">Registros de utilização</h5>
+            <span class="ia-muted small">
+                {{ total_chamadas }} registro(s)
+            </span>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table ia-table">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Modelo</th>
+                        <th>Tokens entrada</th>
+                        <th>Tokens saída</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Duração</th>
+                        <th>Data</th>
+                        <th>Detalhes</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for registro in registros %}
+                        <tr>
+                            <td>
+                                {% if registro.usuario %}
+                                    {{ registro.usuario.username }}
+                                {% else %}
+                                    <span class="ia-muted">Usuário removido</span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ registro.modelo }}</td>
+
+                            <td>{{ registro.tokens_entrada }}</td>
+
+                            <td>{{ registro.tokens_saida }}</td>
+
+                            <td class="fw-bold">
+                                {{ registro.total_tokens }}
+                            </td>
+
+                            <td>
+                                {% if registro.status == "sucesso" %}
+                                    <span class="ia-badge-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Sucesso
+                                    </span>
+                                {% else %}
+                                    <span class="ia-badge-error">
+                                        <i class="bi bi-x-circle me-1"></i>
+                                        Erro
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ registro.duracao_ms }} ms</td>
+
+                            <td class="text-nowrap">
+                                {{ registro.criado_em|date:"d/m/Y H:i" }}
+                            </td>
+
+                            <td>
+                                {% if registro.mensagem_erro %}
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-danger"
+                                        data-bs-toggle="popover"
+                                        data-bs-trigger="focus"
+                                        data-bs-placement="left"
+                                        data-bs-content="{{ registro.mensagem_erro }}"
+                                        title="Detalhes do erro"
+                                    >
+                                        <i class="bi bi-info-circle"></i>
+                                    </button>
+                                {% else %}
+                                    <span class="ia-muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center py-5">
+                                <i class="bi bi-inbox fs-2 ia-muted"></i>
+                                <p class="ia-muted mt-2 mb-0">
+                                    Nenhum registro encontrado.
+                                </p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINAÇÃO -->
+        {% if pagina.has_other_pages %}
+            <nav class="mt-4">
+                <ul class="pagination ia-pagination justify-content-center">
+
+                    {% if pagina.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?pagina={{ pagina.previous_page_number }}&busca={{ busca|urlencode }}&status={{ filtro_status }}">
+                                Anterior
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            {{ pagina.number }} de {{ pagina.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if pagina.has_next %}
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?pagina={{ pagina.next_page_number }}&busca={{ busca|urlencode }}&status={{ filtro_status }}">
+                                Próxima
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </nav>
+        {% endif %}
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (elemento) {
+            new bootstrap.Popover(elemento);
+        });
+    });
+</script>
+
+{% endblock %}
